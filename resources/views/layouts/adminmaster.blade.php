@@ -78,78 +78,82 @@
                                         Produk
                                     </p>
                                 </a>
-                                <!-- <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="./index.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Dashboard v1</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="./index2.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Dashboard v2</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="./index3.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Dashboard v3</p>
-                                        </a>
-                                    </li>
-                                </ul> -->
-                            </li>
-                            <li class="nav-item {{request()->is('admin/categories') ? 'menu-open':''}}">
+                                {{-- <ul class="nav nav-treeview">
+                                    <li class="nav-item {{request()->is('admin/categories') ? 'menu-open':''}}">
                                 <a href="/admin/categories" class="nav-link">
                                     <div class="icon-container d-inline-block">
-                                        <i class="fas fa-list"></i>
+                                        <i class="far fa-circle nav-icon"></i>
+
                                     </div>
                                     <p>
                                         Kategori
                                     </p>
                                 </a>
                             </li>
-                            <li class="nav-item {{request()->is('admin/couriers') ? 'menu-open':''}}">
-                                <a href="/admin/couriers" class="nav-link">
-                                    <div class="icon-container d-inline-block">
-                                        <i class="fas fa-shipping-fast"></i>
-                                    </div>
-                                    <p>
-                                        Kurir
-                                    </p>
-                                </a>
-                            </li>
                             <li class="nav-item {{request()->is('admin/discounts') ? 'menu-open':''}}">
                                 <a href="/admin/discounts" class="nav-link">
                                     <div class="icon-container d-inline-block">
-                                        <i class="fas fa-tags"></i>
+                                        <i class="far fa-circle nav-icon"></i>
+
                                     </div>
                                     <p>
                                         Diskon
                                     </p>
                                 </a>
                             </li>
-                            <li class="nav-item {{request()->is('admin/transactions') ? 'menu-open':''}}">
-                                <a href="/admin/transactions" class="nav-link">
-                                    <div class="icon-container d-inline-block">
-                                        <i class="fas fa-exchange-alt"></i>
-                                    </div>
-                                    <p>
-                                        Transaksi
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item {{request()->is('admin/users') ? 'menu-open':''}}">
-                                <a href="/admin/users" class="nav-link">
-                                    <div class="icon-container d-inline-block">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <p>
-                                        Pengguna
-                                    </p>
-                                </a>
-                            </li>
-                            <!-- <li class="nav-item">
+                        </ul> --}}
+                        </li>
+                        <li class="nav-item {{request()->is('admin/categories') ? 'menu-open':''}}">
+                            <a href="/admin/categories" class="nav-link">
+                                <div class="icon-container d-inline-block">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <p>
+                                    Kategori
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item {{request()->is('admin/couriers') ? 'menu-open':''}}">
+                            <a href="/admin/couriers" class="nav-link">
+                                <div class="icon-container d-inline-block">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </div>
+                                <p>
+                                    Kurir
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item {{request()->is('admin/discounts') ? 'menu-open':''}}">
+                            <a href="/admin/discounts" class="nav-link">
+                                <div class="icon-container d-inline-block">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                <p>
+                                    Diskon
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item {{request()->is('admin/transactions') ? 'menu-open':''}}">
+                            <a href="/admin/transactions" class="nav-link">
+                                <div class="icon-container d-inline-block">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                                <p>
+                                    Transaksi
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item {{request()->is('admin/users') ? 'menu-open':''}}">
+                            <a href="/admin/users" class="nav-link">
+                                <div class="icon-container d-inline-block">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <p>
+                                    Pengguna
+                                </p>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
                                 <a href="pages/widgets.html" class="nav-link">
                                     <i class="nav-icon fas fa-th"></i>
                                     <p>
@@ -192,6 +196,16 @@
         </div>
     </div>
 </body>
+<script>
+    $('.has-treeview').click(function(){
+    if($(this).hasClass('menu-open')){
+        $(this).removeClass('menu-open');
+    }
+    else{
+        $(this).addClass('menu-open');
+    }
+    })
+</script>
 @yield('script')
 
 </html>

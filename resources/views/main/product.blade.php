@@ -57,7 +57,8 @@
 
 	.main-img {
 		width: 100%;
-		max-height: 500px;
+		max-height: 600px;
+		object-fit: cover;
 	}
 
 	.mid-text {
@@ -155,6 +156,16 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
+
+	/* .main-img {
+		height: 500px;
+		object-fit: cover !important;
+	} */
+
+	.slide-img {
+		height: 200px;
+		object-fit: cover !important;
+	}
 </style>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css"
@@ -173,15 +184,15 @@
 						<img class="main-img img-responsive" src="{{asset('images/products/null.png')}}"
 							alt="First slide">
 						@else
-						<img class="main-img img-responsive"
-							src="{{asset('images/products/'.$product->images->first()->image_name)}}" alt="First slide">
+						<img class="main-img" src="{{asset('images/products/'.$product->images->first()->image_name)}}"
+							alt="First slide">
 						@endif
 					</div>
 					<div id="main_carousel" class="owl-carousel owl-theme mx-auto w-100" data-slider-id="1">
 						@if(count($product->images)==1)
 						@else
 						@foreach ($product->images as $img)
-						<div class="item px-3 img-carousel"> <img class=""
+						<div class="item px-3 img-carousel"> <img class="slide-img"
 								src="{{asset('images/products/'.$img->image_name)}}" alt="First slide">
 						</div>
 						@endforeach

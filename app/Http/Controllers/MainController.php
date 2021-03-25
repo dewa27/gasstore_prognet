@@ -82,4 +82,9 @@ class MainController extends Controller
         // dd($result->forPage(0, 3)->keys());
         return json_encode($result->toArray());
     }
+    public function cart()
+    {
+        $cart = "adas";
+        return view('main.cart', compact('cart'));
+    }
 }

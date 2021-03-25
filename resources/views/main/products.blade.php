@@ -306,7 +306,6 @@
 															<i class="fas fa-shopping-cart fa-stack-1x"></i>
 														</span>
 													</a>
-													<a href="#" class="mr-3"><i class="fas fa-cart-plus"></i></a>
 												</div>
 											</div>
 										</div>`;

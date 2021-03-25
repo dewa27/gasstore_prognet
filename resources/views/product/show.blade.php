@@ -150,7 +150,6 @@ Detail Produk
             nav:true,
             items:1,
             // autoHeight:true,
-            loop:true,
         });
         // $('#carouselExampleIndicators').carousel();
     });

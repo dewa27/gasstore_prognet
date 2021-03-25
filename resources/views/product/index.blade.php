@@ -100,10 +100,16 @@ Produk
                     <div class="d-flex justify-content-between align-content-center">
                         <h4>Daftar Produk</h4>
                         <!-- Button trigger modal -->
-                        <a href="/admin/products/create" class="btn btn-primary text-light">
-                            <i class="fas fa-plus-circle"></i>
-                            Tambahkan Produk Baru
-                        </a>
+                        <div>
+                            <a href="/admin/products/create" class="btn btn-primary text-light">
+                                <i class="fas fa-plus-circle"></i>
+                                Tambahkan Produk Baru
+                            </a>
+                            <a href="/admin/products/trashed" class="btn btn-danger text-light">
+                                <i class="fas fa-dumpster"></i>
+                                Sampah
+                            </a>
+                        </div>
                     </div>
                     <!-- <div class=" card-tools">
                             <ul class="nav nav-pills ml-auto">

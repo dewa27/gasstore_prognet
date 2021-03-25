@@ -112,23 +112,25 @@ class ProductController extends Controller
         $product->update($val);
         //Update categories
         $categories = request()->input('category_id');
+        $product->categories()->sync($categories);
+        //Logika masukin many to many sebelum tau sync
         // dd($categories);
-        $pro_categories = $product->categories;
-        $pro_categories_id = [];
-        foreach ($pro_categories as $category) {
-            array_push($pro_categories_id, $category->id);
-            if (!in_array($category->id, $categories)) {
-                $cat = ProductCategoryDetails::where('product_id', $product->id)->where('category_id', $category->id)->delete();
-            }
-        }
-        foreach ((array) $categories as $category_id) {
-            if (!in_array($category_id, $pro_categories_id)) {
-                ProductCategoryDetails::create([
-                    'product_id' => $product->id,
-                    'category_id' => $category_id,
-                ]);
-            }
-        }
+        // $pro_categories = $product->categories;
+        // $pro_categories_id = [];
+        // foreach ($pro_categories as $category) {
+        //     array_push($pro_categories_id, $category->id);
+        //     if (!in_array($category->id, $categories)) {
+        //         $cat = ProductCategoryDetails::where('product_id', $product->id)->where('category_id', $category->id)->delete();
+        //     }
+        // }
+        // foreach ((array) $categories as $category_id) {
+        //     if (!in_array($category_id, $pro_categories_id)) {
+        //         ProductCategoryDetails::create([
+        //             'product_id' => $product->id,
+        //             'category_id' => $category_id,
+        //         ]);
+        //     }
+        // }
 
 
         //Menghapus images yang dihapus
@@ -191,5 +193,22 @@ class ProductController extends Controller
         // // return $result->paginate(3)->toJson();
         // return $tes->toJson();
         return json_encode($result);
+    }
+    public function trash()
+    {
+        $products = Product::onlyTrashed()->get();
+        return view('product.trash', compact('products'));
+    }
+    public function trashTheTrashed($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+        $product->forceDelete();
+        return redirect('/admin/products/trashed');
+    }
+    public function restore($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+        $product->restore();
+        return redirect('/admin/products/trashed');
     }
 }
