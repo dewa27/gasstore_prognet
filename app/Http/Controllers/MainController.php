@@ -6,9 +6,10 @@ use App\Product;
 use App\ProductCategory;
 use App\ProductCategoryDetails;
 use App\ProductImages;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\Console\Input\Input;
+use App\Review;
 
 class MainController extends Controller
 {
@@ -31,7 +32,8 @@ class MainController extends Controller
             $products_cat = ProductCategory::find($category->id)->products;
             $similar_products = $similar_products->merge($products_cat);
         }
-        $similar_products = $similar_products->chunk(4);
+        $similar_products = $similar_products->where('id', '!=', $product->id)->take(10);
+        // dd($similar_products);
         return view('main.product', compact('product', 'similar_products'));
     }
     public function search(Request $request)
@@ -86,5 +88,33 @@ class MainController extends Controller
     {
         $cart = "adas";
         return view('main.cart', compact('cart'));
+    }
+    public function login()
+    {
+        return view('main.login');
+    }
+    public function register()
+    {
+        return view('main.register');
+    }
+    public function user_profile()
+    {
+        $user = Auth::user();
+        return view('main.profile', compact('user'));
+    }
+    public function user_send_review()
+    {
+        $val = request()->validate([
+            'content' => 'required'
+        ], [
+            'content.required' => "Balasan terhadap review harus diisi!"
+        ]);
+        $val['rate'] = request()->input('rate');
+        $val['product_id'] = request()->input('product_id');
+        ///------GANTI USER ID INGET KALO MOD 1 UDAH SELESAI
+        $val['user_id'] = 1;
+        // dd($val);
+        Review::create($val);
+        return back();
     }
 }

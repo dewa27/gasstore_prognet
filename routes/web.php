@@ -25,8 +25,15 @@ Route::get('/products', 'MainController@products');
 Route::get('/products/{product:id}/detail', 'MainController@product');
 Route::get('/products/search', 'MainController@search');
 Route::get('/cart', 'MainController@cart');
-//------------------END HALAMAN PUBLIK--------------------
+Route::get('/login', 'MainController@login');
+Route::get('/register', 'MainController@register');
+Route::post('/product/review', 'MainController@user_send_review');
+//------------------START HALAMAN PUBLIK--------------------
 
+//------------------START HALAMAN USER--------------------
+// Route::get('/user/profile', 'User');
+
+//------------------START HALAMAN USER--------------------
 
 //------------------START HALAMAN ADMIN--------------------
 //<<<<<----PRODUK : FINISHED---->>>>>
@@ -41,6 +48,7 @@ Route::get('/admin/products/search', 'ProductController@search');
 Route::get('/admin/products/trashed', 'ProductController@trash');
 Route::delete('/admin/products/trashed/{id}/delete', 'ProductController@trashTheTrashed');
 Route::get('/admin/products/trashed/{id}/restore', 'ProductController@restore');
+Route::post('/admin/product/review/response', 'ReviewController@send_response');
 
 //<<<<<----PRODUK KATEGORI: FINISHED---->>>>>
 Route::get('/admin/categories', 'ProductCategoryController@index');

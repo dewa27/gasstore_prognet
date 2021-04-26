@@ -166,6 +166,45 @@
 		height: 200px;
 		object-fit: cover !important;
 	}
+
+	.fonted {
+		font-family: "Cormorant Garamond", Georgia, serif !important;
+	}
+
+	.form-control:focus {
+		box-shadow: none;
+	}
+
+	.form-control-underlined {
+		border-width: 0;
+		border-bottom-width: 1px;
+		border-radius: 0;
+		padding-left: 0;
+	}
+
+	.form-control::placeholder {
+		color: #aaa;
+		font-style: italic;
+	}
+
+	.input-star {
+		cursor: pointer;
+	}
+
+	.user-review-star {
+		color: rgb(234, 39, 45) !important;
+		/* background: linear-gradient(90deg, rgba(234, 39, 45, 1) 100%, rgba(3, 3, 3, 0.4) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent; */
+	}
+
+	.user-review-star-click {
+		color: rgb(234, 39, 45) !important;
+	}
+
+	.user-review-star-black {
+		color: black;
+	}
 </style>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css"
@@ -204,12 +243,25 @@
 					<div style="min-height:200px;">
 						<p class="mb-3 px-3">{{$product->description}}</p>
 					</div>
-					<p class="font-weight-bold border-bottom border-danger my-3">Harga <span
-							class="float-right font-weight-light">{{$product->price}}</span></p>
+					<div>
+						@if(!is_null($product->getActiveDiscount()))
+						<p class="font-weight-bold my-0">Harga <span
+								class="float-right font-weight-light">{{number_format($product->price,0,',','.')}}</span>
+						</p>
+						<p class="font-weight-bold my-0">Diskon <span
+								class="float-right font-weight-light">{{$product->price}}</span></p>
+						<p class="font-weight-bold border-bottom border-danger my-2">Harga Setelah Diskon <span
+								class="float-right font-weight-light">{{number_format($product->price*((100-$product->getActiveDiscount()->percentage)/100),0,',','.')}}</span>
+						</p>
+						@else
+						<p class="font-weight-bold border-bottom border-danger my-3">Harga <span
+								class="float-right font-weight-light">{{$product->price}}</span></p>
+						@endif
+					</div>
 					{{-- <p class="font-weight-bold border-bottom border-danger my-3">Jumlah<span><input placeholder="0"
 								class="quantity-custom" min="1" type="number"></span></p> --}}
 					<div class="border-bottom border-danger my-3">
-						<div class="input-group d-flex justify-content-center align-items-center">
+						<div class="input-group d-flex justify-content-between align-items-center">
 							<p style="flex-basis:55%;" class="font-weight-bold my-3">Jumlah Produk</p>
 							<span style="flex-basis:10%;" class="input-group-btn">
 								<button type="button" class="quantity-left-minus btn bg-transparent btn-number"
@@ -240,8 +292,54 @@
 				</div>
 				<div class="col-md-12">
 					<div class="row">
+						<div class="col-md-12">
+							<div class="mb-4">
+								<h4 class="text-light mb-3">Tuliskan review Anda</h4>
+								<form id="createForm" action="/product/review" method="post">
+									@csrf
+									<input type="hidden" value="{{$product->id}}" name="product_id">
+									<input type="hidden" name="rate">
+									<div class="mb-0 input-stars">
+										<span id="1" class="fa fa-star input-star user-review-star-black"></span>
+										<span id="2" class="fa fa-star input-star user-review-star-black"></span>
+										<span id="3" class="fa fa-star input-star user-review-star-black"></span>
+										<span id="4" class="fa fa-star input-star user-review-star-black"></span>
+										<span id="5" class="fa fa-star input-star user-review-star-black"></span>
+									</div>
+									<div class="d-flex">
+										<input type="text"
+											class="fonted bg-transparent text-white form-control form-control-underlined"
+											name="content" autocomplete="off" placeholder="Masukkan review Anda...">
+										<button value="submit" form="createForm" type="submit"
+											class="btn bg-dark text-light">Kirim
+											Review</button>
+									</div>
+								</form>
+							</div>
+						</div>
 						<div class="col-md-7 review-container">
+							@if(count($product->reviews))
+							@foreach ($product->reviews as $review)
+							{{-- @if($review->user_id==Auth::user()->id) --}}
 							<div class="card card-style mb-2">
+								<div class="card-body">
+									<h3 class="mb-0" style="color:#EA272D;">{{$review->user->name}}
+										{{$review->user_id=='1' ? '(You)' : ''}}</h3>
+									<div>
+										@for ($i = 0; $i < $review->rate; $i++)
+											<span class="fa fa-star user-review-star"></span>
+											@endfor
+											@if ($review->rate < 5) @for ($i=0; $i < 5-$review->rate; $i++)
+												<span class="fa fa-star user-review-star-black"></span>
+												@endfor
+												@endif
+									</div>
+									<p class="mb-0">{{$review->content}}</p>
+								</div>
+							</div>
+							@endforeach
+							@endif
+							{{-- <div class="card card-style mb-2">
 								<div class="card-body">
 									<h3 class="mb-0" style="color:#EA272D;">Dewa Krishna</h3>
 									<p class="mb-0">*****</p>
@@ -268,13 +366,13 @@
 									<p class="mb-0">*****</p>
 									<p class="mb-0">Produknya bagus tapi kok saya gak dikirim-kirim</p>
 								</div>
-							</div>
+							</div> --}}
 						</div>
 						<div class="col-md-5">
 							<div class="d-flex justify-content-center align-items-center">
-								<i style="background: rgb(234, 39, 45);background: linear-gradient(90deg, rgba(234, 39, 45, 1) {{$product->product_rate*20}}%, rgba(3, 3, 3, 0.4)  {{$product->product_rate*20}}%);
+								<i style="background: rgb(234, 39, 45);background: linear-gradient(90deg, rgba(234, 39, 45, 1) {{$product->product_rate*20}}%, rgba(3, 3, 3, 0.4)  {{$product->product_rate*17}}%);
 								-webkit-background-clip: text;
-								-webkit-text-fill-color: transparent;" class="mr-5 fas fa-6x fa-star"></i>
+								-webkit-text-fill-color: transparent;" class="mr-5 text-center fas fa-6x fa-star"></i>
 								<p class="pb-4 mb-0" style="font-size:90px;">{{$product->product_rate}}</p>
 							</div>
 							<div><canvas id="myChart"></canvas></div>
@@ -288,39 +386,38 @@
 				</div>
 				<div class="col-md-12">
 					<div id="btm_carousel" class="owl-carousel owl-theme mx-auto w-100" data-slider-id="1">
-						@foreach($similar_products as $itemArr)
-						<div class="item d-flex">
-							@foreach($itemArr as $item)
-							<div style="height:400px;" class="card card-style w-25 mx-2">
-								<div>
-									<div class="position-relative">
-										@if (is_null($item->images->first()))
-										<a href="/products/{{$item->id}}/detail"><img class="card-img-top card-crop"
-												src="/images/products/null.png" alt="Tidak ada gambar"></a>
-										@else
-										<a href="/products/{{$item->id}}/detail"><img class="card-img-top card-crop"
-												src="/images/products/{{$item->images->first()->image_name}}"
-												alt="Tidak ada gambar"></a>
-										@endif
-										<div class="discount-label"></div>
-										<p class="discount-text">30%</p>
-									</div>
-								</div>
-								{{-- @if(is_null($item->images->first()))
-								<img class="card-img-top card-crop" src="{{asset('images/products/null.png')}}"
-								alt="Card image cap">
-								@else
-								<img class="card-img-top card-crop"
-									src="{{asset('images/products/'.$item->images->first()->image_name)}}"
-									alt="Card image cap">
-								@endif --}}
-								<div class="card-body">
-									<h5 class="card-title font-weight-bold text-light">{{$item->product_name}}</h5>
-									<p class="card-text text-light">{{$item->description}}</p>
-									<a href="#" class="btn btn-primary">Beli Langsung</a>
+						@foreach($similar_products as $item)
+						<div style="height:480px;" class="card card-style mx-2">
+							<div>
+								<div class="position-relative">
+									@if (is_null($item->images->first()))
+									<a href="/products/{{$item->id}}/detail"><img class="card-img-top card-crop"
+											src="/images/products/null.png" alt="Tidak ada gambar"></a>
+									@else
+									<a href="/products/{{$item->id}}/detail"><img class="card-img-top card-crop"
+											src="/images/products/{{$item->images->first()->image_name}}"
+											alt="Tidak ada gambar"></a>
+									@endif
+									@if(!is_null($item->getActiveDiscount()))
+									<div class="discount-label"></div>
+									<p class="discount-text">30%</p>
+									@endif
 								</div>
 							</div>
-							@endforeach
+							{{-- @if(is_null($item->images->first()))
+								<img class="card-img-top card-crop" src="{{asset('images/products/null.png')}}"
+							alt="Card image cap">
+							@else
+							<img class="card-img-top card-crop"
+								src="{{asset('images/products/'.$item->images->first()->image_name)}}"
+								alt="Card image cap">
+							@endif --}}
+							<div class="card-body">
+								<h5 class="card-title font-weight-bold text-light">{{$item->product_name}}</h5>
+								<p class="card-text text-light">{{Str::limit($item->description, 100, $end='...')}}
+								</p>
+								<a href="#" class="btn btn-primary">Beli Langsung</a>
+							</div>
 						</div>
 						@endforeach
 					</div>
@@ -393,8 +490,8 @@
 		let btm_carousel=$('#btm_carousel');
 		btm_carousel.owlCarousel({
 			nav:true,
-			center:true,
-			items:1,
+			// center:true,
+			items:4,
             // autoHeight:true,
         });
 		var ctx = document.getElementById('myChart').getContext('2d');
@@ -423,6 +520,27 @@
 					}]
 				}
 			}
+		});
+		$("input[name='rate']").val(0);
+		$('.input-star').hover(function(){
+			var param=parseInt($(this).attr('id'));
+			for(i=1;i<=param;i++){
+				$(`#${i}`).addClass('user-review-star');
+			}
+		},function(){
+			var param=parseInt($(this).attr('id'));
+			for(i=1;i<=param;i++){
+				$(`#${i}`).removeClass('user-review-star');
+			}
+		});
+		$('.input-star').click(function(){
+			$('.input-star').removeClass('user-review-star-click');
+			var param=parseInt($(this).attr('id'));
+			for(i=1;i<=param;i++){
+				$(`#${i}`).addClass('user-review-star-click');
+			}
+			$("input[name='rate']").val(`${param}`);
+			console.log($("input[name='rate']").val());
 		});
         // $('#carouselExampleIndicators').carousel();
 		// $('.selectpicker').selectpicker({

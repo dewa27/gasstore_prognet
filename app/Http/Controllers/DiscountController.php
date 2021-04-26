@@ -37,6 +37,9 @@ class DiscountController extends Controller
             'end.required' => "Tanggal berakhirnya diskon harus diisi!",
             'end.after' => "Tanggal berakhirnya diskon tidak valid!",
         ]);
+        // 'email' => ['required', 'string', 'email', 'max:191',Rule::unique('users')->where(function ($query) use ($request) {
+        //     return $query->where('company_id', $request->company_id);
+        // })],
         $cat = Discount::create($val);
         return redirect('admin/discounts');
     }

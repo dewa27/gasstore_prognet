@@ -64,7 +64,7 @@
                     </div>
                     <div class="text-center menu-1 menu-wrap margin-add">
                         <ul>
-                            <li><a href="index.html">Login / Signup</a></li>
+                            <li><a href="/login">Login / Signup</a></li>
                             <li><a href="/cart"><i class="fas fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>

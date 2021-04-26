@@ -138,6 +138,10 @@
 		color: #F3A3A3 !important;
 	}
 
+	.card-action {
+		position: relative;
+	}
+
 	.star-icon {
 		color: rgb(234, 39, 45);
 	}
@@ -155,6 +159,20 @@
 	.input-number::-webkit-inner-spin-button {
 		-webkit-appearance: none;
 		margin: 0;
+	}
+
+	.btn-delete {
+		position: absolute;
+		top: 0;
+		right: 0;
+		border-radius: 5px !important;
+		padding: 5px 10px;
+		font-size: 12px;
+	}
+
+	.fa-plus,
+	.fa-minus {
+		font-size: 12px;
 	}
 </style>
 <link rel="stylesheet"
@@ -174,17 +192,78 @@
 			</div>
 			<div class="row px-3">
 				<div class="col-md-8">
-					<div class="card-style rounded p-3 mb-2">
+					<div class="card-style card-action rounded p-3 mb-2">
 						<p class="font-weight-bold">Motor tua</p>
 						<p>Motor keren mantep banget nih udah di keranjang</p>
+						<button id="" type="button" class="m-0 btn btn-danger text-light btn-delete">
+							<i class="fas fa-trash"></i>
+						</button>
+						<div class="mt-5 input-group d-flex justify-content-between align-items-center">
+							<p class="font-weight-bold m-0">Harga Produk</p>
+							<p class="font-weight-bold mr-4">Rp.300.000</p>
+						</div>
+						<div class="input-group d-flex justify-content-between align-items-center">
+							<p class="font-weight-bold my-3">Jumlah Produk</p>
+							<div>
+								<span class="input-group-btn p-0 m-0">
+									<button type="button" class="quantity-left-minus btn bg-transparent btn-number"
+										data-type="minus" data-field="">
+										<i class="fas fa-minus text-light"></i>
+										{{-- <span class="glyphicon glyphicon-minus"></span> --}}
+									</button>
+								</span>
+								<input type="number" name="quantity"
+									class="quantity form-control p-0 text-light input-number d-inline-block text-center p-0 m-0"
+									value="1" min="1" max="100">
+								<span class="input-group-btn p-0 m-0">
+									<button type="button" class="quantity-right-plus btn bg-transparent btn-number"
+										data-type="plus" data-field="">
+										<i class="fas fa-plus text-light"></i>
+										{{-- <span class="glyphicon glyphicon-plus"></span> --}}
+									</button>
+								</span>
+							</div>
+						</div>
 					</div>
-					<div class="card-style rounded p-3 mb-2">
+					<div class="card-style card-action rounded p-3 mb-2">
 						<p class="font-weight-bold">Motor tua</p>
 						<p>Motor keren mantep banget nih udah di keranjang</p>
+						<button id="" type="button" class="m-0 btn btn-danger text-light btn-delete">
+							<i class="fas fa-trash"></i>
+						</button>
+						<div class="mt-5 input-group d-flex justify-content-between align-items-center">
+							<p class="font-weight-bold m-0">Harga Produk</p>
+							<p class="font-weight-bold mr-4">Rp.300.000</p>
+						</div>
+						<div class="input-group d-flex justify-content-between align-items-center">
+							<p class="font-weight-bold my-3">Jumlah Produk</p>
+							<div>
+								<span class="input-group-btn p-0 m-0">
+									<button type="button" class="quantity-left-minus btn bg-transparent btn-number"
+										data-type="minus" data-field="">
+										<i class="fas fa-minus text-light"></i>
+										{{-- <span class="glyphicon glyphicon-minus"></span> --}}
+									</button>
+								</span>
+								<input type="number" name="quantity"
+									class="quantity form-control p-0 text-light input-number d-inline-block text-center p-0 m-0"
+									value="1" min="1" max="100">
+								<span class="input-group-btn p-0 m-0">
+									<button type="button" class="quantity-right-plus btn bg-transparent btn-number"
+										data-type="plus" data-field="">
+										<i class="fas fa-plus text-light"></i>
+										{{-- <span class="glyphicon glyphicon-plus"></span> --}}
+									</button>
+								</span>
+							</div>
+						</div>
 					</div>
-					<div class="card-style rounded p-3 mb-2">
+					<div class="card-style card-action rounded p-3 mb-2">
 						<p class="font-weight-bold">Motor tua</p>
 						<p>Motor keren mantep banget nih udah di keranjang</p>
+						<button id="" type="button" class="m-0 btn btn-danger text-light btn-delete">
+							<i class="fas fa-trash"></i>
+						</button>
 					</div>
 
 				</div>
@@ -222,94 +301,57 @@
 	crossorigin="anonymous"></script>
 <script>
 	$(function() {
-				var quantitiy=0;
+		var quantitiy=0;
 		$('.quantity-right-plus').click(function(e){
 				
-				// Stop acting like a button
-				e.preventDefault();
-				// Get the field name
-				var quantity = parseInt($('#quantity').val());
-				
-				// If is not undefined
-					
-					$('#quantity').val(quantity + 1);
-
-				
-					// Increment
-				
-			});
-
-			$('.quantity-left-minus').click(function(e){
-				// Stop acting like a button
-				e.preventDefault();
-				// Get the field name
-				var quantity = parseInt($('#quantity').val());
-				
-				// If is not undefined
+			// Stop acting like a button
+			e.preventDefault();
+			// Get the field name
+			var quantity = parseInt($(this).parent().siblings('.quantity').val());
 			
-					// Increment
-					if(quantity>0){
-					$('#quantity').val(quantity - 1);
-					}
-			});
+			// var quantity = parseInt($('#quantity').val());
+			
+			// If is not undefined
+			if(quantity!=parseInt($(this).parent().siblings('.quantity').attr('max'))){
+				// console.log($('#quantity').attr('max'));
+				// console.log(quantity);
+				// $(this).attr('disabled','disabled');
+				$(this).parent().siblings('.quantity').val(quantity + 1);
+			}
+		});
+		$('.quantity-left-minus').click(function(e){
+			// Stop acting like a button
+			e.preventDefault();
+			// Get the field name
+			var quantity = parseInt($(this).parent().siblings('.quantity').val());
+			
+			// If is not undefined
+		
+				// Increment
+			if(quantity>1){
+				$(this).parent().siblings('.quantity').val(quantity - 1);
+			}
+		});
+		$('.input-number').keyup(function(){
+			var thiz = $(this);
+			setTimeout(function(){
+				if (thiz.val() < parseInt(thiz.attr('min')))
+					thiz.val(parseInt(thiz.attr('min')));
+				if (thiz.val() > parseInt(thiz.attr('max')))
+					thiz.val(parseInt(thiz.attr('max')));
+			},2000);
+		});
 		$(".btn-hovered").hover(function() {
 			$(this).removeClass("btn-primary");
 		}, function() {
 			$(this).addClass("btn-primary");
 		});
-		let carousel=$('#main_carousel');
-        carousel.owlCarousel({
-			nav:true,
-            items:2,
-			loop:true,
-			center:true,
-            // autoHeight:true,
-        });
-		carousel.on('change.owl.carousel', function(event) {
-			setTimeout(function() {
-				let img=$('.main-img');
-				let centerImage=$('.center img').attr("src");
-				console.log(centerImage);
-				img.fadeOut('fast', function () {
-					img.attr('src', centerImage);
-					img.fadeIn('fast');
-				});
-			},20);
-		});
-		let btm_carousel=$('#btm_carousel');
-		btm_carousel.owlCarousel({
-			nav:true,
-			center:true,
-			items:1,
-            // autoHeight:true,
-        });
-		var ctx = document.getElementById('myChart').getContext('2d');
-		var myBarChart = new Chart(ctx, {
-			type: 'horizontalBar',
-			data: {
-				labels: ["5","4", "3", "2", "1"],
-				datasets: [
-					{
-					backgroundColor: ["#EA272D","#EA272D","#EA272D","#EA272D","#EA272D"],
-					data: [1,1,3,2,1]
-					}
-				]
-			},
-			options: {
-				legend: {
-					display: false,
-				},
-		        scales: {
-					xAxes: [{
-						ticks: {
-							suggestedMin: 0,
-                    		suggestedMax: 25,
-							stepSize:5
-						}
-					}]
-				}
-			}
-		});
+		// $('.input-number').change(function(){
+		// 	console.log("aaa");
+		// 	if($(this).val()==$(this).attr('min')){
+		// 		console.log("aaa");
+		// 	}
+		// });
         // $('#carouselExampleIndicators').carousel();
 		// $('.selectpicker').selectpicker({
 		// 	noneSelectedText: 'Pilih Kategori',

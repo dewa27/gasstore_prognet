@@ -33,7 +33,7 @@ class ProductController extends Controller
     {
         $val = $request->validate([
             'product_name' => 'required',
-            'price' => 'required|numeric',
+            'price' => 'required',
             'description' => 'required',
             'stock' => 'required|numeric',
             'weight' => 'required|numeric',
@@ -42,7 +42,6 @@ class ProductController extends Controller
         ], [
             'product_name.required' => "Nama produk harus diisi!",
             'price.required' => "Harga Produk harus diisi!",
-            'price.numeric' => "Harga Produk berupa angka saja!",
             'description.required' => "Deskripsi harus diisi!",
             'stock.required' => "Stok Produk harus diisi!",
             'stock.numeric' => "Stok Produk berupa angka!",
@@ -51,17 +50,14 @@ class ProductController extends Controller
             'category_id.required' => 'Kategori harus dipilih',
             'product_images.*.mimes' => 'File hanya berupa foto',
         ]);
-
+        $val['price'] = preg_replace('/[^0-9]/', '', $val['price']);
         //Store produk ke products
         $product = Product::create($val);
         //Ambil input categories
         $categories = $request->input('category_id');
         //Store categories ke product_categories
         foreach ((array) $categories as $category_id) {
-            ProductCategoryDetails::create([
-                'product_id' => $product->id,
-                'category_id' => $category_id,
-            ]);
+            $product->attach($category_id);
         }
         //Ambil input images
         $images = $request->file('product_images');
@@ -91,7 +87,7 @@ class ProductController extends Controller
     {
         $val = request()->validate([
             'product_name' => 'required',
-            'price' => 'required|numeric',
+            'price' => 'required',
             'description' => 'required',
             'stock' => 'required|numeric',
             'weight' => 'required|numeric',
@@ -100,7 +96,6 @@ class ProductController extends Controller
         ], [
             'product_name.required' => "Nama produk harus diisi!",
             'price.required' => "Harga Produk harus diisi!",
-            'price.numeric' => "Harga Produk berupa angka saja!",
             'description.required' => "Deskripsi harus diisi!",
             'stock.required' => "Stok Produk harus diisi!",
             'stock.numeric' => "Stok Produk berupa angka!",
@@ -109,6 +104,7 @@ class ProductController extends Controller
             'category_id.required' => 'Kategori harus dipilih',
             'product_images.*.mimes' => 'File hanya berupa foto',
         ]);
+        $val['price'] = preg_replace('/[^0-9]/', '', $val['price']);
         $product->update($val);
         //Update categories
         $categories = request()->input('category_id');

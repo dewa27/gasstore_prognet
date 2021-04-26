@@ -1,6 +1,10 @@
 @extends('layouts.adminmaster')
 @section('head')
 <style>
+    p {
+        margin: 0;
+    }
+
     .tag {
         font-size: 12px !important;
         border-radius: 15px !important;
@@ -36,6 +40,19 @@
     /* ---Pake carousel OwlCarousel2--- */
     .owl-nav span {
         font-size: 30px !important;
+    }
+
+    .reply-button {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .user-review-star {
+        color: #FDCC0D;
+    }
+
+    .user-review-star-black {
+        color: black;
     }
 </style>
 @endsection
@@ -133,11 +150,80 @@
                         </tr>
                     </tbody>
                 </table>
+                <h3>Review</h3>
+                @foreach ($product->reviews as $review)
+                <div class="card">
+                    <div id="{{$review->id}}" class="card-body">
+                        <div class="d-flex">
+                            <h5 class="reviewer-name mr-2">{{$review->user->name}}</h5>
+                            <p class="font-weight-italic">{{$review->created_at->diffForHumans()}}</p>
+                        </div>
+                        <div class="reviewer-stars">
+                            @for ($i = 0; $i < $review->rate; $i++)
+                                <span class="fa fa-star user-review-star"></span>
+                                @endfor
+                                @if ($review->rate < 5) @for ($i=0; $i < 5-$review->rate; $i++)
+                                    <span class="fa fa-star user-review-star-black"></span>
+                                    @endfor
+                                    @endif
+                        </div>
+                        <p class="reviewer-content">{{$review->content}}</p>
+                        <div class="text-right mb-2">
+                            <p id="reply{{$review->id}}" class="reply-button reply mr-3">
+                                Balas</p>
+                            <p id="show-reply{{$review->id}}" class="reply-button show-reply">Lihat Balasan</p>
+                        </div>
+                        <div class="hidden-response" id="hidden{{$review->id}}">
+                            @foreach ($review->responses as $response)
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                        <p class="font-weight-bold mr-2">{{$response->admin->name}} (Admin)</p>
+                                        <p class="font-weight-italic">{{$response->created_at->diffForHumans()}}</p>
+                                    </div>
+                                    <p>{{$response->content}}</p>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @endforeach
             </div><!-- /.card-body -->
+        </section>
     </div>
-    </section>
 </div>
-</div><!-- /.container-fluid -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="mb-1">
+                    <h5 id="review-name"></h5>
+                    <div id="review-star"></div>
+                    <p id="review-content"></p>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="responseForm" action="/admin/product/review/response" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="content">Ketik balasan untuk review di atas</label>
+                        <input class="form-control" type="text" name="content">
+                    </div>
+                    <input type="hidden" name="review_id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="submit" value="submit" form="responseForm" class="btn btn-primary">Kirim Balasan</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('title')
 Detail Produk
@@ -145,11 +231,32 @@ Detail Produk
 @section('script')
 <script>
     $(document).ready(function(){
+        $('.hidden-response').hide();
         $(".owl-carousel").owlCarousel({
             margin:10,
             nav:true,
             items:1,
             // autoHeight:true,
+        });
+        $('.reply').click(function(){
+            var reviewid=parseInt($(this).attr('id').substring(5));
+            $('#review-name').html($(`#${reviewid} .reviewer-name`).html());
+            $('#review-star').html($(`#${reviewid} .reviewer-stars`).html());
+            $('#review-content').html($(`#${reviewid} .reviewer-content`).html());
+            $('[name="review_id"]').val(reviewid);
+            $('#exampleModal').modal('show');
+        });
+        $('.show-reply').click(function(){
+            var btn=$(this);
+            var reviewid=parseInt($(this).attr('id').substring(10));
+            $(`#hidden${reviewid}`).toggle(function(){
+                if(($(this)).is(":hidden")){
+                    btn.html('Lihat Balasan');
+                }
+                if(($(this)).is(":visible")){
+                    btn.html('Tutup Balasan');
+                }
+            });
         });
         // $('#carouselExampleIndicators').carousel();
     });

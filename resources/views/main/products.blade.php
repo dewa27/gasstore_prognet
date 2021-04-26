@@ -146,7 +146,6 @@
 				</div>
 				<div class="col-md-9">
 					<div class="form-group mb-4">
-
 						<div class="d-flex align-items-center">
 							<input id="search" type="name" placeholder="Cari nama produk..." name="keyword"
 								autocomplete="off"
@@ -177,8 +176,10 @@
 											src="/images/products/{{$product->images->first()->image_name}}"
 											alt="Tidak ada gambar"></a>
 									@endif
+									@if(!is_null($product->getActiveDiscount()))
 									<div class="discount-label"></div>
 									<p class="discount-text">30%</p>
+									@endif
 								</div>
 							</div>
 							<div class="card-body">
@@ -200,10 +201,18 @@
 								@endforeach
 								@endif
 								<p class="card-text mb-3 text-light">{{$product->description}}</p>
+								@if(is_null($product->getActiveDiscount()))
 								<p class="m-0 text-light bg-danger d-inline py-1 px-2 rounded-capsule">
-									Rp.{{number_format($product->price,0,',','.')}}</p>
+									Rp {{number_format($product->price,0,',','.')}}</p>
+								@else
+								<p class="m-0 text-light bg-danger d-inline py-1 px-2 rounded-capsule">
+									Rp
+									{{number_format($product->price*((100-$product->getActiveDiscount()->percentage)/100),0,',','.')}}
+								</p>
 								<p class="mx-1 text-danger d-inline">
-									<sup><s>Rp.{{number_format($product->price,0,',','.')}}</s></sup></p>
+									<sup><s>Rp {{number_format($product->price,0,',','.')}}</s></sup>
+								</p>
+								@endif
 							</div>
 							<div class="card-footer py-1 d-flex justify-content-between align-items-center">
 								<a href="#" class="m-0 btn btn-hovered">Beli Langsung</a>
