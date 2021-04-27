@@ -5,7 +5,7 @@ GAS STORE - TOKO ONLINE MOTOR TUA TERPERCAYA SEJAK 1971
 ## Description
 
 Sebuah toko motor tua online berbasis website yang menjual motor-motor tua, spare part, aksesoris dan pernak-pernik ala motor tua lainnya. 
-
+Dibuat dengan Laravel 7
 
 ### Dependencies
 
