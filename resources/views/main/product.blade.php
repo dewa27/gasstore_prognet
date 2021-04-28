@@ -239,24 +239,21 @@
 					</div>
 				</div>
 				<div class="col-md-5">
-					<h2 class="text-center">Motor</h2>
-					<div style="min-height:200px;">
-						<p class="mb-3 px-3">{{$product->description}}</p>
-					</div>
-					<div>
+					<h2 style="font-size:38px;" class="text-center">{{$product->product_name}}</h2>
+					<div class="mb-2">
 						@if(!is_null($product->getActiveDiscount()))
-						<p class="font-weight-bold my-0">Harga <span
-								class="float-right font-weight-light">{{number_format($product->price,0,',','.')}}</span>
-						</p>
-						<p class="font-weight-bold my-0">Diskon <span
-								class="float-right font-weight-light">{{$product->price}}</span></p>
-						<p class="font-weight-bold border-bottom border-danger my-2">Harga Setelah Diskon <span
-								class="float-right font-weight-light">{{number_format($product->price*((100-$product->getActiveDiscount()->percentage)/100),0,',','.')}}</span>
-						</p>
+						<h3 class="font-weight-bold text-light px-3"><span class="harga"
+								id='{{$product->getActiveDiscount()->percentage}}'>Rp
+								{{number_format($product->price*((100-$product->getActiveDiscount()->percentage)/100),0,',','.')}}</span>
+							<sup class="pl-2"><del>{{number_format($product->price,0,',','.')}}</del></sup></h3>
 						@else
-						<p class="font-weight-bold border-bottom border-danger my-3">Harga <span
-								class="float-right font-weight-light">{{$product->price}}</span></p>
+						<h3 id='0' class="font-weight-bold text-light harga px-3">Rp
+							{{number_format($product->price,0,',','.')}}
+						</h3>
 						@endif
+					</div>
+					<div style="min-height:200px;">
+						<p class="mb-3 px-3 text-justify">{{$product->description}}</p>
 					</div>
 					{{-- <p class="font-weight-bold border-bottom border-danger my-3">Jumlah<span><input placeholder="0"
 								class="quantity-custom" min="1" type="number"></span></p> --}}
@@ -281,6 +278,19 @@
 								</button>
 							</span>
 						</div>
+					</div>
+					<div class="input-group d-flex justify-content-between">
+						<p class="font-weight-bold">Subtotal</p>
+						@if(!is_null($product->getActiveDiscount()))
+						<p id="subtotal" class="font-weight-bold text-light px-3">
+							Rp
+							{{number_format($product->price*((100-$product->getActiveDiscount()->percentage)/100),0,',','.')}}
+						</p>
+						@else
+						<p id="subtotal">Rp {{number_format($product->price,0,',','.')}}</p>
+						@endif
+
+
 					</div>
 					<a href="#" class="d-block mb-2 mx-auto btn btn-hovered">Beli Langsung</a>
 					<a href="#" class="d-block mx-auto btn btn-hovered">Tambahkan ke Keranjang</a>
@@ -433,7 +443,35 @@
 	crossorigin="anonymous"></script>
 <script>
 	$(function() {
-				var quantitiy=0;
+		var product=@json($product->toArray());
+		var status=$('.harga').attr('id');
+		function formatRupiah(angka, prefix){
+			var number_string = angka.toString(),
+			split   		= number_string.split(','),
+			sisa     		= split[0].length % 3,
+			rupiah     		= split[0].substr(0, sisa),
+			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+ 
+			// tambahkan titik jika yang di input sudah menjadi angka ribuan
+			if(ribuan){
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+ 
+			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+		}
+		if(status==0){
+			var harga=product.price;
+		}else{
+			var harga=(100-parseInt(status))*product.price/100;
+		}
+		function updateSubtotal(quan){
+			var status=$('.harga').attr('id');
+			console.log(harga*quan);
+			$('#subtotal').html(formatRupiah(harga*quan));
+		}
+		var quantitiy=0;
 		$('.quantity-right-plus').click(function(e){
 				
 				// Stop acting like a button
@@ -445,7 +483,7 @@
 					
 					$('#quantity').val(quantity + 1);
 
-				
+				updateSubtotal(quantity+1)
 					// Increment
 				
 			});
@@ -459,9 +497,10 @@
 				// If is not undefined
 			
 					// Increment
-					if(quantity>0){
+					if(quantity>1){
 					$('#quantity').val(quantity - 1);
-					}
+					updateSubtotal(quantity-1)
+				}
 			});
 		$(".btn-hovered").hover(function() {
 			$(this).addClass("btn-primary");
