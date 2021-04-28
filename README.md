@@ -1,34 +1,39 @@
-# Project Title
+## Laravel 7 multiple authentication system
 
-GAS STORE - TOKO ONLINE MOTOR TUA TERPERCAYA SEJAK 1971
+## Clone this repo
+```
+https://github.com/samironbarai/laravel-7-multi-auth.git
+```
 
-## Description
+## Install composer packages
+```
+$ cd laravel-7-multi-auth
+$ composer install
+```
 
-Sebuah toko motor tua online berbasis website yang menjual motor-motor tua, spare part, aksesoris dan pernak-pernik ala motor tua lainnya. 
-Dibuat dengan Laravel 7
+## Create and setup .env file
+```
+make a copy of .env.example and rename to .env
+$ php artisan key:generate
+put database credentials in .env file
+```
 
-### Dependencies
+## Migrate and insert records
+```
+$ php artisan migrate
+```
 
-1. Bootstrap 
-2. JQuery
-3. Bootstrap Selectpicker
-4. AOS (Animate on Scroll)
-5. OwlCarousel2
-6. Font Awesome
-## Authors
+## Mail setup 
+```
+visit at : https://mailtrap.io/
+put mail credentials in .env file
+```
 
-1. Dewa Ngakan Made Bagus Krishna K.
-2. Anak Agung Ngurah Pasha Catra Parama
-3. I Putu Gede Adi Khusuma
-4. Arsyi Reyhan Ramadhan
-5. I Kadek Krisna Wijaksana
-6. Gusti Komang Wisnu Aditya
+## Facing any problem? Contact with me
 
+Click on the image bellow to see YouTube video.
 
+[![Laravel 7 Multi Auth](https://img.youtube.com/vi/qXYa-TIrzr8/0.jpg)](https://www.youtube.com/watch?v=qXYa-TIrzr8) 
 
-## Version History
-
-
-## License
-
-This project is licensed under the [PROGNET 6] License - see the LICENSE.md file for details
+Please visit my website.
+[samironbarai.com](https://samironbarai.com) 
