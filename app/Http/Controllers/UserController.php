@@ -13,4 +13,8 @@ class UserController extends Controller
         $users = User::all();
         return view('useradmin.index', compact('users'));
     }
+    public function login()
+    {
+        return view('auth.login');
+    }
 }

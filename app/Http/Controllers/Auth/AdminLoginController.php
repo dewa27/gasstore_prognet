@@ -21,7 +21,8 @@ class AdminLoginController extends Controller
     public function login(Request $request)
     {
         // Validate form data
-        $this->validate($request,
+        $this->validate(
+            $request,
             [
                 'email' => 'required|string|email',
                 'password' => 'required|string|min:8'
