@@ -13,10 +13,6 @@ use Symfony\Component\Console\Input\Input;
 class ProductController extends Controller
 {
     //
-    public function __construct()
-    {
-        $this->middleware('auth:admin');
-    }
     public function index()
     {
         $products = Product::all();

@@ -23,8 +23,7 @@ class AdminRegisterController extends Controller
     public function register(Request $request)
     {
         // Validate form data
-        $this->validate(
-            $request,
+        $this->validate($request,
             [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:admins'],
