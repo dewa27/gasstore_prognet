@@ -45,91 +45,130 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-content-center">
-                        <h4>Detail Produk</h4>
+                        <h4>Detail Transaksi</h4>
                         <div>
-                            <a href="/admin/products/{{$product->id}}/edit" class="mr-1 btn btn-success text-light">
-                                <i class="fas fa-edit"></i>
-                                Ubah Produk
-                            </a>
-                            <a href="/admin/products" class="btn btn-primary text-light">
+                            {{-- <a href="/admin/products/{{$product->id}}/edit" class="mr-1 btn btn-success
+                            text-light">
+                            <i class="fas fa-edit"></i>
+                            Ubah Produk
+                            </a> --}}
+                            <a href="/admin/transactions" class="btn btn-primary text-light">
                                 <i class="fas fa-arrow-circle-left"></i>
-                                Kembali ke Daftar Produk
+                                Kembali ke Daftar Transaksi
                             </a>
+                            @if($transaction->status=="unverified")
+                            <a style="pointer-events:none; background-color:orange"
+                                class="btn text-light">Unverified</a>
+                            @elseif($transaction->status=="verified")
+                            <a style="pointer-events:none; background-color:blue" class="btn text-light">Verified</a>
+                            @elseif($transaction->status=="delivered")
+                            <a style="pointer-events:none; background-color:yellow" class="btn text-dark">Delivered</a>
+                            @endif
                         </div>
                     </div>
                 </div><!-- /.card-header -->
-                <div class="card-body">
-                    <h5>{{$product->product_name}}</h5>
-                    @if(count($product->categories))
-                    @foreach($product->categories as $category)
-                    <p class="d-inline-block tag px-2 py-1">{{$category->category_name}}</p>
-                    @endforeach
-                    @endif
-                    @if(count($product->images))
-                    <div id="carouselExampleIndicators" class="w-100 carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            @foreach($product->images as $image)
-                            @if($loop->index==0)
-                            <li data-target="#carouselExampleIndicators" data-slide-to="{{$loop->index}}" class="active"></li>
-                            @else
-                            <li data-target="#carouselExampleIndicators" data-slide-to="{{$loop->index}}"></li>
-                            @endif
-                            @endforeach
-                        </ol>
-                        <div class="carousel-inner">
-                            @foreach($product->images as $image)
-                            @if($loop->index==0)
-                            <div class="carousel-item active">
-                                <img class="d-block" src="{{asset('images/products/'.$image->image_name)}}" alt="First slide">
-                            </div>
-                            @else
-                            <div class="carousel-item">
-                                <img class="d-block" src="{{asset('images/products/'.$image->image_name)}}" alt="First slide">
-                            </div>
-                            @endif
-                            @endforeach
+                <div class="card-body container">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th class="pr-4">Nama Pembeli</th>
+                                        <td>{{$transaction->user->name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pr-4">Provinsi</th>
+                                        <td>{{$transaction->province}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pr-4">Kota/Kabupaten</th>
+                                        <td>{{$transaction->regency}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pr-4">Alamat</th>
+                                        <td>{{$transaction->address}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pr-4">Biaya Pengiriman</th>
+                                        <td>Rp {{number_format($transaction->shipping_cost,0,',','.')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pr-4">Total Harga Barang</th>
+                                        <td>Rp {{number_format($transaction->sub_total,0,',','.')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pr-4">Total Bayar</th>
+                                        <td>Rp {{number_format($transaction->total,0,',','.')}}</td>
+                                    </tr>
+                                    <tr class="mt-5">
+                                        <th class="pr-4">Status</th>
+                                        <td>{{$transaction->status}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+                        <div class="col-md-5">
+                            <div class="text-center">
+                                <h5>Bukti Transfer</h5>
+                                <img class="w-100 mb-2" src="/images/verif/{{$transaction->proof_of_payment}}" alt="">
+                                <form method="POST" id="changeStatus" action="/admin/transaction/update-status">
+                                    @csrf
+                                    <input name="id" type="hidden" value="{{$transaction->id}}">
+                                    @if ($transaction->status=="unverified" && $transaction->proof_of_payment!=null)
+                                    <input type="hidden" name="status" value="verified">
+                                    <button type="submit" class="btn btn-success"> <i
+                                            class="fa fa-refresh mr-2"></i>Approve
+                                        Bukti
+                                        Pembayaran</button>
+                                    @elseif($transaction->status=="verified")
+                                    <input type="hidden" name="status" value="delivered">
+                                    <button type="submit" class="btn btn-success"> <i
+                                            class="fa fa-refresh mr-2"></i>Update
+                                        Status ke
+                                        Delivered</button>
+                                    @endif
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    @else
-                    <div class="no-photo">
-                        <h3 class="text-center">Tidak ada foto</h3>
-                    </div>
-                    @endif
+                    <h4 class="text-center">Detail Produk</h4>
                     <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nama Produk</th>
+                                <th>Berat</th>
+                                <th>Jumlah</th>
+                                <th>Harga</th>
+                                <th>Diskon</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            <tr class="d-flex">
-                                <th class="col-4" scope="row">Stok</th>
-                                <td class="col-8">{{$product->stock}}</td>
+                            @foreach ($transaction->detail_transaksi as $item)
+                            <tr>
+                                <td><a
+                                        href="/admin/products/{{$item->product_id}}/detail">{{$item->product->product_name}}</a>
+                                </td>
+                                <td>{{$item->product->weight}} gram</td>
+                                <td>{{$item->qty}}</td>
+                                <td>{{number_format($item->selling_price,0,',','.')}}</td>
+                                <td>{{$item->discount}}%</td>
+                                <td>Rp {{number_format($item->selling_price * $item->qty,0,',','.')}}</td>
                             </tr>
-                            <tr class="d-flex">
-                                <th class="col-4" scope="row">Berat</th>
-                                <td class="col-8">{{$product->weight}}</td>
-                            </tr>
-                            <tr class="d-flex">
-                                <th class="col-4" scope="row">Deskripsi</th>
-                                <td class="col-8">{{$product->description}}</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div><!-- /.card-body -->
             </div>
         </section>
     </div>
-</div><!-- /.container-fluid -->
+</div>
 @endsection
 @section('title')
 Detail Produk
 @endsection
 @section('script')
 <script>
-    $('#carouselExampleIndicators').carousel();
+
 </script>
 @endsection

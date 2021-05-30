@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class CourierController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     public function index()
     {
         $couriers = Courier::all();

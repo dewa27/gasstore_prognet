@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\DatabaseAdminNotification;
+use App\Notifications\AdminNotification;
 use App\Product;
 use App\ProductCategory;
 use App\ProductCategoryDetails;
 use App\ProductImages;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\Console\Input\Input;
+use Illuminate\Support\Facades\View;
 
 class ProductController extends Controller
 {

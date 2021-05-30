@@ -192,16 +192,18 @@
 		$(window).scroll(function(){
 
 			var $win = $(window);
-			if ($win.scrollTop() > 100) {
+			if ($win.scrollTop() > 60) {
 				$('.js-top').addClass('active');
 			} else {
 				$('.js-top').removeClass('active');
 			}
 
-			if ( $win.scrollTop() > 100 ) {
+			if ( $win.scrollTop() > 60 ) {
 				$('.fh5co-nav').addClass('scrollied');
+				$('.dropdown-nav').addClass('blackid');
 			} else {
 				$('.fh5co-nav').removeClass('scrollied');
+				$('.dropdown-nav').removeClass('blackid');
 			}
 
 		});

@@ -67,6 +67,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-content-center">
+                        <p class="d-none scroll_review" data-notif-id="{{Session::get('scroll_review')}}"></p>
                         <h4>Detail Produk</h4>
                         <div>
                             <a href="/admin/products/{{$product->id}}/edit" class="mr-1 btn btn-success text-light">
@@ -94,102 +95,67 @@
                                 alt="First slide"></div>
                         @endforeach
                     </div>
-                    {{-- <div id="carouselExampleIndicators" class="w-100 carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            @foreach($product->images as $image)
-                            @if($loop->index==0)
-                            <li data-target="#carouselExampleIndicators" data-slide-to="{{$loop->index}}"
-                    class="active"></li>
                     @else
-                    <li data-target="#carouselExampleIndicators" data-slide-to="{{$loop->index}}"></li>
+                    <div class="no-photo">
+                        <h3 class="text-center">Tidak ada foto</h3>
+                    </div>
                     @endif
-                    @endforeach
-                    </ol>
-                    <div class="carousel-inner">
-                        @foreach($product->images as $image)
-                        @if($loop->index==0)
-                        <div class="carousel-item active">
-                            <img class="d-block" src="{{asset('images/products/'.$image->image_name)}}"
-                                alt="First slide">
-                        </div>
-                        @else
-                        <div class="carousel-item">
-                            <img class="d-block" src="{{asset('images/products/'.$image->image_name)}}"
-                                alt="First slide">
-                        </div>
-                        @endif
-                        @endforeach
-                    </div>
-                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div> --}}
-                @else
-                <div class="no-photo">
-                    <h3 class="text-center">Tidak ada foto</h3>
-                </div>
-                @endif
-                <table class="table">
-                    <tbody>
-                        <tr class="d-flex">
-                            <th class="col-4" scope="row">Stok</th>
-                            <td class="col-8">{{$product->stock}}</td>
-                        </tr>
-                        <tr class="d-flex">
-                            <th class="col-4" scope="row">Berat</th>
-                            <td class="col-8">{{$product->weight}}</td>
-                        </tr>
-                        <tr class="d-flex">
-                            <th class="col-4" scope="row">Deskripsi</th>
-                            <td class="col-8">{{$product->description}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h3>Review</h3>
-                @foreach ($product->reviews as $review)
-                <div class="card">
-                    <div id="{{$review->id}}" class="card-body">
-                        <div class="d-flex">
-                            <h5 class="reviewer-name mr-2">{{$review->user->name}}</h5>
-                            <p class="font-weight-italic">{{$review->created_at->diffForHumans()}}</p>
-                        </div>
-                        <div class="reviewer-stars">
-                            @for ($i = 0; $i < $review->rate; $i++)
-                                <span class="fa fa-star user-review-star"></span>
-                                @endfor
-                                @if ($review->rate < 5) @for ($i=0; $i < 5-$review->rate; $i++)
-                                    <span class="fa fa-star user-review-star-black"></span>
-                                    @endfor
-                                    @endif
-                        </div>
-                        <p class="reviewer-content">{{$review->content}}</p>
-                        <div class="text-right mb-2">
-                            <p id="reply{{$review->id}}" class="reply-button reply mr-3">
-                                Balas</p>
-                            <p id="show-reply{{$review->id}}" class="reply-button show-reply">Lihat Balasan</p>
-                        </div>
-                        <div class="hidden-response" id="hidden{{$review->id}}">
-                            @foreach ($review->responses as $response)
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <p class="font-weight-bold mr-2">{{$response->admin->name}} (Admin)</p>
-                                        <p class="font-weight-italic">{{$response->created_at->diffForHumans()}}</p>
-                                    </div>
-                                    <p>{{$response->content}}</p>
-                                </div>
+                    <table class="table">
+                        <tbody>
+                            <tr class="d-flex">
+                                <th class="col-4" scope="row">Stok</th>
+                                <td class="col-8">{{$product->stock}}</td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th class="col-4" scope="row">Berat</th>
+                                <td class="col-8">{{$product->weight}}</td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th class="col-4" scope="row">Deskripsi</th>
+                                <td class="col-8">{{$product->description}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3>Review</h3>
+                    @foreach ($product->reviews as $review)
+                    <div class="card">
+                        <div id="reviewbox{{$review->id}}" class="card-body">
+                            <div class="d-flex">
+                                <h5 class="reviewer-name mr-2">{{$review->user->name}}</h5>
+                                <p class="font-weight-italic">{{$review->created_at->diffForHumans()}}</p>
                             </div>
-                            @endforeach
+                            <div class="reviewer-stars">
+                                @for ($i = 0; $i < $review->rate; $i++)
+                                    <span class="fa fa-star user-review-star"></span>
+                                    @endfor
+                                    @if ($review->rate < 5) @for ($i=0; $i < 5-$review->rate; $i++)
+                                        <span class="fa fa-star user-review-star-black"></span>
+                                        @endfor
+                                        @endif
+                            </div>
+                            <p class="reviewer-content">{{$review->content}}</p>
+                            <div class="text-right mb-2">
+                                <p id="reply{{$review->id}}" class="reply-button reply mr-3">
+                                    Balas</p>
+                                <p id="show-reply{{$review->id}}" class="reply-button show-reply">Lihat Balasan</p>
+                            </div>
+                            <div class="hidden-response" id="hidden{{$review->id}}">
+                                @foreach ($review->responses as $response)
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <p class="font-weight-bold mr-2">{{$response->admin->name}} (Admin)</p>
+                                            <p class="font-weight-italic">{{$response->created_at->diffForHumans()}}</p>
+                                        </div>
+                                        <p>{{$response->content}}</p>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
-                @endforeach
-            </div><!-- /.card-body -->
+                    @endforeach
+                </div><!-- /.card-body -->
         </section>
     </div>
 </div>
@@ -223,7 +189,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>8
 @endsection
 @section('title')
 Detail Produk
@@ -231,6 +197,15 @@ Detail Produk
 @section('script')
 <script>
     $(document).ready(function(){
+        let ses=$('.scroll_review').attr('data-notif-id');
+        if(ses==""){
+            ses=0;
+        }
+        if(ses!=0){
+            $([document.documentElement, document.body]).animate({
+            scrollTop: $(`#${ses}`).offset().top
+            }, 1000);
+        }
         $('.hidden-response').hide();
         $(".owl-carousel").owlCarousel({
             margin:10,
@@ -240,9 +215,13 @@ Detail Produk
         });
         $('.reply').click(function(){
             var reviewid=parseInt($(this).attr('id').substring(5));
-            $('#review-name').html($(`#${reviewid} .reviewer-name`).html());
-            $('#review-star').html($(`#${reviewid} .reviewer-stars`).html());
-            $('#review-content').html($(`#${reviewid} .reviewer-content`).html());
+            console.log(reviewid);
+            $('#review-name').html($(`#reviewbox${reviewid} .reviewer-name`).html());
+            $('#review-star').html($(`#reviewbox${reviewid} .reviewer-stars`).html());
+            $('#review-content').html($(`#reviewbox${reviewid} .reviewer-content`).html());
+            // $('#review-name').html($(`#${reviewid}`).find('.reviewer-name').html());
+            // $('#review-star').html($(`#${reviewid}`).find('.reviewer-stars').html());
+            // $('#review-content').html($(`#${reviewid}`).find('.reviewer-content').html());
             $('[name="review_id"]').val(reviewid);
             $('#exampleModal').modal('show');
         });

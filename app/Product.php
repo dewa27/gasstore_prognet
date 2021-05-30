@@ -28,22 +28,17 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
     public function transactions()
     {
         return $this->belongsToMany(Transaction::class, 'transaction_details', 'product_id', 'transaction_id');
     }
-    public function haveBuyed()
+    public function transaction_details()
     {
-        $doHaveBuyed = false;
-        foreach ($this->transactions as $transaction) {
-            if ($transaction->user_id == Auth::user()->id) {
-                $doHaveBuyed = true;
-                break;
-            } else {
-                continue;
-            }
-        }
-        return $doHaveBuyed;
+        return $this->hasMany(TransactionDetail::class);
     }
     public function getActiveDiscount()
     {
@@ -53,5 +48,15 @@ class Product extends Model
             $activeDiscount = NULL;
         }
         return $activeDiscount;
+    }
+    public function getPriceOrDiscountedPrice()
+    {
+        $discount = $this->getActiveDiscount();
+        if ($discount != NULL) {
+            $price = $this->price * (100 - $discount->percentage) / 100;
+        } else {
+            $price = $this->price;
+        }
+        return $price;
     }
 }

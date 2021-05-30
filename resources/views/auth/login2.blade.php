@@ -143,28 +143,59 @@
 			</div>
 			<div class="row px-3">
 				<div class="col-md-6">
-					<form action="">
+					<form method="POST" action="{{route('login')}}">
+						@csrf
 						<div class="form-group">
 							{{-- <label style="font-size:20px;" class="font-weight-bold mb-0" for="email">Email</label> --}}
-							<input type="text"
-								class="fonted bg-transparent text-white form-control form-control-underlined py-0"
+							<input type="email"
+								class="fonted bg-transparent text-white form-control form-control-underlined py-0 @error('email') is-invalid @enderror"
 								name="email" autocomplete="off" placeholder="Email">
+							@error('email')
+							<span class="invalid-feedback" role="alert">
+								<strong>{{ $message }}</strong>
+							</span>
+							@enderror
 						</div>
 						<div class="form-group">
 							{{-- <label style="font-size:20px;" class="font-weight-bold mb-0"
 								for="email">Password</label> --}}
-							<input type="password"
-								class="fonted bg-transparent text-white form-control form-control-underlined py-0"
-								name="password" placeholder="Password">
+							<input type="password" placeholder="Password" name="password" required
+								autocomplete="current-password"
+								class="fonted bg-transparent text-white form-control form-control-underlined py-0 @error('password') is-invalid @enderror">
+							@error('password')
+							<span class=" invalid-feedback" role="alert">
+								<strong>{{ $message }}</strong>
+							</span>
+							@enderror
 						</div>
-						<button id="submit" type="submit" class="bg-dark btn text-light w-100">Masuk</button>
+						<div class="form-group">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="remember" id="remember"
+									{{ old('remember') ? 'checked' : '' }}>
+
+								<label class="form-check-label" for="remember">
+									{{ __('Remember Me') }}
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<button type="submit" class="bg-dark btn text-light w-100"">
+									{{ __('Login') }}
+								</button>
+
+								@if (Route::has('password.request'))
+								<a class=" btn btn-link px-0" href="{{ route('password.request') }}">
+								{{ __('Lupa Password?') }}
+								</a>
+								@endif
+						</div>
 					</form>
 				</div>
-				<div class="col-md-6">
+				<div class=" col-md-6">
 					<p class="mb-2">Anda belum memiliki akun?</p>
 					<p class="mb-3">Tekan tombol di bawah ini untuk membuat akun dan bawa pulang
 						barang-barang impian Anda!</p>
-					<a href="/register" id='register' class="w-100 bg-dark btn text-light">Buat Akun</a>
+					<a href="{{route('register')}}" id='register' class="w-100 bg-dark btn text-light">Buat Akun</a>
 				</div>
 			</div>
 		</div>

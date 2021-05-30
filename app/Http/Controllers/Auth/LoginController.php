@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Session;
 
 class LoginController extends Controller
 {
@@ -40,9 +41,22 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout', 'userLogout');
     }
 
+    protected function showLoginForm()
+    {
+        if (Auth::check()) {
+            return redirect()->back()->with('success', 'your message here');;
+        }
+        return view('auth.login2');
+    }
     public function userLogout(Request $request)
     {
         Auth::guard('web')->logout();
         return redirect('/');
+        // return redirect('/')->with('success', 'Anda telah berhasil Login!');
+    }
+    protected function authenticated(Request $request, $user)
+    {
+        $request->session()->flash('flash', 'Anda berhasil login !');
+        return redirect()->intended($this->redirectPath());
     }
 }

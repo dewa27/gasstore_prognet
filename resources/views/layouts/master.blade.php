@@ -30,119 +30,193 @@
     <!-- <link rel="stylesheet" href="/css/animate.css"> -->
     <!-- Bootstrap  -->
     @yield('head')
+    <style>
+        .container-absolute {
+            position: absolute;
+            top: 2%;
+            left: 50%;
+            width: 30%;
+            transform: translate(-50%, 0);
+        }
+
+        .dropdown-container {
+            position: relative;
+        }
+
+        .dropdown-nav {
+            /* background: black; */
+            text-align: left !important;
+            display: none;
+            position: absolute;
+            top: 60% !important;
+            left: 0% !important;
+        }
+
+        .dropdown-nav li a {
+            line-height: 15px !important;
+        }
+
+
+        .blackid {
+            background-color: black;
+        }
+
+        .fas {
+            color: #EA272D;
+        }
+
+        .fa-bell {
+            color: #EA272D !important;
+        }
+
+        .button-notify {
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer !important;
+        }
+
+        .button-notify:focus {
+            outline: none;
+            color: white;
+        }
+
+        .notif-box {
+            position: absolute !important;
+            top: 80%;
+            z-index: 1;
+            overflow: auto;
+            max-height: 300px;
+            display: none;
+        }
+
+        .notif-item:hover {
+            filter: brightness(150%) !important;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
-
     <div id="page">
         <nav class="fh5co-nav" role="navigation">
             <!-- <div class="top-menu"> -->
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12 text-center logo-wrap">
+            <div class="container h-100">
+                <div class="row my-auto">
+                    <div style="right:18%;" class="w-50 notif-box navpopup-menu">
+                        <div style="background-color:black;" class="card px-2 py-2">
+                            <form id="notifForm" action="notifikasi/baca" method="POST">
+                                @csrf
+                                <input id="trans_id" type="hidden" name="transaction_id">
+                                <input id="response_id" type="hidden" name="response_id">
+                                <input id="notif_id" type="hidden" name="notification_id">
+                                <input id="product_id" type="hidden" name="product_id">
+                                <h5 class="text-center text-light">Notifikasi</h5>
+                                @if(isset($notif))
+                                @if($notif->count()==0)
+                                <p class="text-center text-light">Tidak ada Notifikasi</p>
+                                @else
+                                @foreach ($notif as $item)
+                                @if($item->data['type']=="transaction")
+                                <div style="background:rgba(56, 59, 57, 0.4) !important"
+                                    data-notif-type="{{$item->data['type']}}" data-notif="{{$item->id}}"
+                                    id="{{$item->data['type']=="transaction" ? $item->data['transaction_id'] : $item->data['response_id']}}"
+                                    class="card my-1 p-2 notif-item">
+                                    <p class="mb-0 text-light">{{$item->data['message']}}</p>
+                                    @foreach (\App\Transaction::find($item->data['transaction_id'])->detail_transaksi as
+                                    $product)
+                                    <p class="mb-0" style="font-size:14px">
+                                        {{-- <p>Budhi</p> --}}
+                                        {{\App\Product::find($product->product_id)->product_name}} - {{$product->qty}}
+                                    </p>
+                                    @endforeach
+                                    <p style="font-size:14px;" class="mt-2 mb-0 text-light">Status Transaksi :
+                                        {{$item->data['status']}}</p>
+                                    <p class="mb-0 text-right text-light" style="font-size:14px;">
+                                        {{$item->created_at->diffForHumans()}}</p>
+                                </div>
+                                @else
+                                <div style="background:rgba(56, 59, 57, 0.4) !important"
+                                    data-notif-type="{{$item->data['type']}}" data-notif="{{$item->id}}"
+                                    id="{{$item->data['response_id']}}" class="card my-1 p-2 notif-item">
+                                    <p class="mb-0 text-light">Admin membalas reviewmu!</p>
+                                    <p class="mb-0 text-light">{{$item->data['message']}}</p>
+                                    <p class="mb-0 text-right text-light" style="font-size:14px;">
+                                        {{$item->created_at->diffForHumans()}}</p>
+                                </div>
+                                @endif
+                                @endforeach
+                                @endif
+                                @else
+                                <p class="text-center text-light">Tidak ada Notifikasi</p>
+                                @endif
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 text-center logo-wrap">
                         <a href=""><img class="logo" src="/images/logo.png" alt=""></a>
                         <!-- <div id="fh5co-logo"><a href="index.html"></a></div> -->
                     </div>
 
-                    <div class="text-center menu-1 menu-wrap">
+                    <div class="col-md-6 menu-1 menu-wrap">
                         <ul>
                             <li class="{{request()->is('/') ? 'active':''}}"><a href="/">Home</a></li>
-                            <!-- <li><a href="menu.html">Menu</a></li> -->
-                            {{-- <li class="has-dropdown"> --}}
                             <li class="{{request()->is('products') ? 'active':''}}">
                                 <a href="/products">Produk</a>
-                                <!-- <ul class="dropdown">
-									<li><a href="#">Events</a></li>
-									<li><a href="#">Food</a></li>
-									<li><a href="#">Coffees</a></li>
-								</ul> -->
                             </li>
-                            <!-- <li><a href="reservation.html">Reservation</a></li> -->
                             <li><a href="about.html">Tentang Kami</a></li>
-                            <!-- <li><a href="contact.html">Contact</a></li> -->
                         </ul>
                     </div>
-                    <div class="text-center menu-1 menu-wrap margin-add">
-                        <ul>
-                            <li><a href="/login">Login / Signup</a></li>
+                    @if(Illuminate\Support\Facades\Auth::guard('web')->check())
+                    <div class="col-md-4 text-center menu-1 menu-wrap d-flex justify-content-end">
+                        <ul class="mr-4">
+                            <div class="dropdown-container position-relative">
+                                <ul class="mt-0">
+
+                                    <li class="akun mr-2"><a href="">{{Auth::user()->name}}<i
+                                                class="ml-1 fa fa-caret-down"></i></a></li>
+                                    <li style="font-size:12px;" class="breadcrumb-item"><button class="button-notify"><i
+                                                class="fas fa-lg fa-bell"></i></button></li>
+                                    </li>
+                                </ul>
+                                <ul class="dropdown-nav navpopup-menu">
+                                    <li class="p-0"><a class="py-0 m-0" href="/edit/profile">Pengaturan</a></li>
+                                    <li class="p-0"><a class="py-0 m-0" href="/pembelian">Transaksi</a></li>
+                                    <li class="p-0"><a class="py-0 m-0" href="" onclick="event.preventDefault();
+                                    document.getElementById('frm-logout').submit();">Logout</a>
+                                    </li>
+                                    <form id="frm-logout" action="{{ route('user.logout') }}" method="POST"
+                                        style="display: none;">
+                                        @csrf
+                                    </form>
+                                </ul>
+                            </div>
+                        </ul>
+                        <ul class="">
                             <li><a href="/cart"><i class="fas fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
+                    @else
+                    <div class="col-md-4 text-center menu-1 menu-wrap d-flex justify-content-end">
+                        <ul>
+                            <li><a href="/login">Login / Signup</a></li>
+                            {{-- <li><a href="/cart"><i class="fas fa-shopping-cart"></i></a></li> --}}
+                        </ul>
+                    </div>
+                    @endif
                 </div>
-
             </div>
             <!-- </div> -->
         </nav>
         @yield('content')
-        <!-- <div id="fh5co-slider" class="fh5co-section animate-box">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6 animate-box">
-						<div class="fh5co-heading">
-							<h2>Our Best <em>&amp;</em> Unique Menu</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis ab debitis sit itaque totam, a maiores nihil, nulla magnam porro minima officiis!</p>
-						</div>
-					</div>
-					<div class="col-md-6 col-md-push-1 animate-box">
-						<aside id="fh5co-slider-wrwap">
-							<div class="flexslider">
-								<ul class="slides">
-									<li style="background-image: url(images/gallery_7.jpeg);">
-										<div class="overlay-gradient"></div>
-										<div class="container-fluid">
-											<div class="row">
-												<div class="col-md-12 col-md-offset-0 col-md-pull-10 slider-text slider-text-bg">
-													<div class="slider-text-inner">
-														<div class="desc">
-															<h2>Crab <em>with</em> Curry Sources</h2>
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt eveniet quae, numquam magnam doloribus eligendi ratione rem, consequatur quos natus voluptates est totam magni! Nobis a temporibus, ipsum repudiandae dolorum.</p>
-															<p><a href="#" class="btn btn-primary btn-outline">Learn More</a></p>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</li>
-									<li style="background-image: url(images/gallery_6.jpeg);">
-										<div class="overlay-gradient"></div>
-										<div class="container-fluid">
-											<div class="row">
-												<div class="col-md-12 col-md-offset-0 col-md-pull-10 slider-text slider-text-bg">
-													<div class="slider-text-inner">
-														<div class="desc">
-															<h2>Tuna <em>&amp;</em> Roast Beef</h2>
-															<p>Ink is a free html5 bootstrap and a multi-purpose template perfect for any type of websites. A combination of a minimal and modern design template. The features are big slider on homepage, smooth animation, product listing and many more</p>
-															<p><a href="#" class="btn btn-primary btn-outline">Learn More</a></p>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</li>
-									<li style="background-image: url(images/gallery_5.jpeg);">
-										<div class="overlay-gradient"></div>
-										<div class="container-fluid">
-											<div class="row">
-												<div class="col-md-12 col-md-offset-0 col-md-pull-10 slider-text slider-text-bg">
-													<div class="slider-text-inner">
-														<div class="desc">
-															<h2>Egg <em>with</em> Mushroom</h2>
-															<p>Ink is a free html5 bootstrap and a multi-purpose template perfect for any type of websites. A combination of a minimal and modern design template. The features are big slider on homepage, smooth animation, product listing and many more</p>
-															<p><a href="#" class="btn btn-primary btn-outline">Learn More</a></p>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
-							</div>
-						</aside>
-					</div>
-				</div>
-			</div>
-		</div> -->
+        <div class="container-absolute">
+            @if(Session::has('flash'))
+            <div class="alert alert-success">
+                <p class="msg text-dark text-center"> {{ Session::get('flash') }}</p>
+            </div>
+            @endif
 
+        </div>
         <footer id="fh5co-footer" role="contentinfo" class="fh5co-section">
             <div class="container">
                 <div class="row row-pb-md">
@@ -219,6 +293,37 @@
         integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg=="
         crossorigin="anonymous" />
     @yield('script')
+    <script>
+        setTimeout(function(){
+            $(".container-absolute").remove();
+        }, 3500 ); // 3.5secs
+        $('.akun').click(function(e){
+            e.preventDefault();
+            $('.navpopup-menu').hide();
+            $(".dropdown-nav").toggle();
+        });
+        $('.button-notify').click(function(){
+            $('.navpopup-menu').hide();
+            $('.notif-box').toggle();
+        });
+        $('.notif-item').click(function(){
+            if($(this).attr('data-notif-type')=="transaction"){
+                $('#trans_id').val($(this).attr('id'));
+                $('#notif_id').val($(this).attr('data-notif'));
+            }else{
+                $('#notif_id').val($(this).attr('data-notif'));
+                $('#response_id').val($(this).attr('id'));
+            }
+            $('#notifForm').submit();
+        });
+        $(document).mouseup(function(e) {
+            var container = $(".navpopup-menu");
+            if (!container.is(e.target) && container.has(e.target).length === 0) 
+            {
+                container.hide();
+            }
+        });
+    </script>
 </body>
 
 </html>

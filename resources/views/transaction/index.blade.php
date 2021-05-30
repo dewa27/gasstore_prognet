@@ -107,64 +107,256 @@ Produk
                     </div>
                 </div><!-- /.card-header -->
                 <div class="card-body">
-                    <table class="table table-striped">
-                        {{-- <form action="/admin/products/search" id="searchForm">
-                            <div class="p-1 bg-light rounded-pill shadow-sm mb-4">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <button id="button-addon2" value="submit" form="searchForm" type="submit"
-                                            class="btn btn-link text-primary"><i class="fa fa-search"></i></button>
-                                    </div>
-                                    <input id="search" type="search" placeholder="Cari nama produk..." name="keyword"
-                                        aria-describedby="button-addon2" class="form-control border-0 bg-light">
-                                </div>
-                            </div>
-                            <select multiple data-style="bg-light rounded-pill px-4 py-3 shadow-sm "
-                                class="selectpicker w-25" id="category" name="category_id[]">
-                                @foreach($categories as $category)
-                                <option value="{{$category->id}}" data-tokens="{{$category->category_name}}">
-                        {{$category->category_name}}</option>
-                        @endforeach
-                        </select>
-                        <button type="submit" form="searchForm"
-                            class="bg-light btn rounded-pill ml-2 px-3 py-2">Terapkan
-                            Filter</button>
-                        </form> --}}
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Nama Pembeli</th>
-                                <th scope="col">Alamat</th>
-                                <th scope="col">Total</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="displayData">
-                            @foreach($transactions as $transaction)
-                            <tr>
-                                <th scope="row">{{$loop->index + 1}}</th>
-                                {{-- <td>{{$product->product_name}}</td>
-                                <td>Rp.{{number_format($product->price,0,',','.')}}</td>
-                                <td>{{$product->stock}}</td> --}}
-                                <td>Tes</td>
-                                <td>{{$transaction->address}}</td>
-                                <td>Tes</td>
-                                <td>
-                                    <a href="" class="btn btn-success text-light">
-                                        <i class="fas fa-info-circle"></i>
-                                        Detail
-                                    </a>
-                                    <button id="" onclick="sendId(this.id)" type="button"
-                                        class="btn btn-danger text-light" data-toggle="modal"
-                                        data-target="#exampleModal">
-                                        <i class="fas fa-trash"></i>
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    {{-- <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#unverified">Unverified</a></li>
+                        <li><a data-toggle="tab" href="#verified">Verified</a></li>
+                        <li><a data-toggle="tab" href="#delivered">Delivered</a></li>
+                        <li><a data-toggle="tab" href="#success">Success</a></li>
+                        <li><a data-toggle="tab" href="#expired">Expired</a></li>
+                        <li><a data-toggle="tab" href="#canceled">Canceled</a></li>
+                    </ul> --}}
+                    <ul class="nav nav-pills mb-4">
+                        <li role="presentation" class="nav-item active">
+                            <a data-toggle="tab" href="#all" class="nav-link active">All</a>
+                        </li>
+                        <li role="presentation" class="nav-item active">
+                            <a data-toggle="tab" href="#unverified" class="nav-link">Unverified</a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" href="#verified" class="nav-link">Verified</a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" href="#delivered" class="nav-link">Delivered</a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" href="#success" class="nav-link">Success</a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" href="#expired" class="nav-link">Expired</a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" href="#canceled" class="nav-link">Canceled</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="all" class="tab-pane fade show active" role="tabpanel">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Pembeli</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="displayData">
+                                    @foreach($transactions as $transaction)
+                                    <tr>
+                                        <th scope="row">{{$loop->index + 1}}</th>
+                                        <td>{{$transaction->user->name}}</td>
+                                        <td>{{$transaction->address}}</td>
+                                        <td>{{number_format($transaction->total,0,',','.')}}</td>
+                                        <td>{{Str::upper($transaction->status)}}</td>
+                                        <td>
+                                            <a href="/admin/transactions/{{$transaction->id}}/detail"
+                                                class="btn btn-success text-light">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="unverified" class="tab-pane fade show" role="tabpanel">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Pembeli</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">Total</th>
+                                        <th>Status</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="displayData">
+                                    @foreach($transactions->where('status','unverified')->all() as $transaction)
+                                    <tr>
+                                        <th scope="row">{{$loop->index + 1}}</th>
+                                        <td>{{$transaction->user->name}}</td>
+                                        <td>{{$transaction->address}}</td>
+                                        <td>{{number_format($transaction->total,0,',','.')}}</td>
+                                        <td>{{Str::upper($transaction->status)}}</td>
+                                        <td>
+                                            <a href="/admin/transactions/{{$transaction->id}}/detail"
+                                                class="btn btn-success text-light">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="verified" role="tabpanel" class="tab-pane fade">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Pembeli</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">Total</th>
+                                        <th>Status</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="displayData">
+                                    @foreach($transactions->where('status','verified')->all() as $transaction)
+                                    <tr>
+                                        <th scope="row">{{$loop->index + 1}}</th>
+                                        <td>{{$transaction->user->name}}</td>
+                                        <td>{{$transaction->address}}</td>
+                                        <td>{{number_format($transaction->total,0,',','.')}}</td>
+                                        <td>{{Str::upper($transaction->status)}}</td>
+                                        <td>
+                                            <a href="/admin/transactions/{{$transaction->id}}/detail"
+                                                class="btn btn-success text-light">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="delivered" role="tabpanel" class="tab-pane fade">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Pembeli</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">Total</th>
+                                        <th>Status</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="displayData">
+                                    @foreach($transactions->where('status','delivered')->all() as $transaction)
+                                    <tr>
+                                        <th scope="row">{{$loop->index + 1}}</th>
+                                        <td>{{$transaction->user->name}}</td>
+                                        <td>{{$transaction->address}}</td>
+                                        <td>{{number_format($transaction->total,0,',','.')}}</td>
+                                        <td>{{Str::upper($transaction->status)}}</td>
+                                        <td>
+                                            <a href="/admin/transactions/{{$transaction->id}}/detail"
+                                                class="btn btn-success text-light">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="success" role="tabpanel" class="tab-pane fade">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Pembeli</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">Total</th>
+                                        <th>Status</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="displayData">
+                                    @foreach($transactions->where('status','success')->all() as $transaction)
+                                    <tr>
+                                        <th scope="row">{{$loop->index + 1}}</th>
+                                        <td>{{$transaction->user->name}}</td>
+                                        <td>{{$transaction->address}}</td>
+                                        <td>{{number_format($transaction->total,0,',','.')}}</td>
+                                        <td>{{Str::upper($transaction->status)}}</td>
+                                        <td>
+                                            <a href="/admin/transactions/{{$transaction->id}}/detail"
+                                                class="btn btn-success text-light">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="expired" role="tabpanel" class="tab-pane fade">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Pembeli</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">Total</th>
+                                        <th>Status</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="displayData">
+                                    @foreach($transactions->where('status','expired')->all() as $transaction)
+                                    <tr>
+                                        <th scope="row">{{$loop->index + 1}}</th>
+                                        <td>{{$transaction->user->name}}</td>
+                                        <td>{{$transaction->address}}</td>
+                                        <td>{{number_format($transaction->total,0,',','.')}}</td>
+                                        <td>{{Str::upper($transaction->status)}}</td>
+                                        <td>
+                                            <a href="/admin/transactions/{{$transaction->id}}/detail"
+                                                class="btn btn-success text-light">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="canceled" role="tabpanel" class="tab-pane fade">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Pembeli</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">Total</th>
+                                        <th>Status</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="displayData">
+                                    @foreach($transactions->where('status','canceled')->all() as $transaction)
+                                    <tr>
+                                        <th scope="row">{{$loop->index + 1}}</th>
+                                        <td>{{$transaction->user->name}}</td>
+                                        <td>{{$transaction->address}}</td>
+                                        <td>{{number_format($transaction->total,0,',','.')}}</td>
+                                        <td>{{Str::upper($transaction->status)}}</td>
+                                        <td>
+                                            <a href="/admin/transactions/{{$transaction->id}}/detail"
+                                                class="btn btn-success text-light">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

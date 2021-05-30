@@ -27,7 +27,7 @@ class AdminRegisterController extends Controller
             $request,
             [
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:admins'],
+                'username' => ['required', 'string', 'unique:admins'],
                 'password' => ['required', 'string', 'min:8']
             ]
         );
@@ -36,7 +36,7 @@ class AdminRegisterController extends Controller
         try {
             $admin = Admin::create([
                 'name' => $request->name,
-                'email' => $request->email,
+                'username' => $request->username,
                 'password' => Hash::make($request->password),
             ]);
 
@@ -44,7 +44,7 @@ class AdminRegisterController extends Controller
             Auth::guard('admin')->loginUsingId($admin->id);
             return redirect()->route('admin.dashboard');
         } catch (\Exception $e) {
-            return redirect()->back()->withInput($request->only('name', 'email'));
+            return redirect()->back()->withInput($request->only('name', 'username'));
         }
     }
 }

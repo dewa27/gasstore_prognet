@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Product;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\DatabaseUserNotification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -16,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'profile_image',
     ];
 
     /**
@@ -36,4 +38,61 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+    public function manyNotReviewed(Product $product)
+    {
+        $manyHaveBuyed = 0;
+        $manyHaveReviewed = 0;
+        $doHaveBuyed = false;
+        foreach ($this->transactions->where('status', 'success') as $transaction) {
+            foreach ($transaction->detail_transaksi as $det_transaksi) {
+                if ($det_transaksi->product_id == $product->id) {
+                    $doHaveBuyed = true;
+                } else {
+                    $doHaveBuyed = false;
+                }
+                break;
+            }
+            if ($doHaveBuyed) {
+                $manyHaveBuyed++;
+            }
+        }
+        foreach ($this->reviews->where('product_id', $product->id) as $review) {
+            $manyHaveReviewed++;
+        }
+        $notReviewed = $manyHaveBuyed - $manyHaveReviewed;
+        return $notReviewed;
+    }
+    public function alreadyReviewed($product_id)
+    {
+        $alrReviewd = false;
+        foreach ($this->reviews as $review) {
+            if ($review->product_id == $product_id) {
+                $alrReviewd = true;
+                break;
+            } else {
+                continue;
+            }
+        }
+        return $alrReviewd;
+    }
+    public function checkIfSameProductInCart($product_id)
+    {
+        return $this->carts->where('status', 'notyet')->where('product_id', $product_id)->first();
+    }
+    public function notifications()
+    {
+        return $this->morphMany(DatabaseUserNotification::class, 'notifiable')->orderBy('created_at');
+    }
 }

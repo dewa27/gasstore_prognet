@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Review;
 use App\Response;
+use App\Transaction;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\UserNotification;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     public function send_response()
     {
         $val = request()->validate([
@@ -16,9 +24,11 @@ class ReviewController extends Controller
             'content.required' => "Balasan review harus diisi!",
         ]);
         $val['review_id'] = request()->input('review_id');
-        ///------GANTI ADMIN ID INGET KALO MOD 1 UDAH SELESAI
-        $val['admin_id'] = 1;
-        Response::create($val);
+        $val['admin_id'] = Auth::user()->id;
+        $response = Response::create($val);
+        $user = Review::find($val['review_id'])->user;
+        $transaction = new Transaction();
+        Notification::send($user, new UserNotification($transaction, $response, "response"));
         return back();
     }
 }

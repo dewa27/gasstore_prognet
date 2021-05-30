@@ -214,7 +214,7 @@
 								</p>
 								@endif
 							</div>
-							<div class="card-footer py-1 d-flex justify-content-between align-items-center">
+							{{-- <div class="card-footer py-1 d-flex justify-content-between align-items-center">
 								<a href="#" class="m-0 btn btn-hovered">Beli Langsung</a>
 								<a class="cart" href="">
 									<span class="fa-stack fa">
@@ -223,7 +223,7 @@
 									</span>
 								</a>
 								<!-- <a href="#" class="mr-3"><i class="fas fa-cart-plus"></i></a> -->
-							</div>
+							</div> --}}
 						</div>
 					</div>
 					@endforeach

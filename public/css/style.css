@@ -1,11 +1,10 @@
-
 /* =======================================================
 *
 * 	Template Style 
 *
 * ======================================================= */
 body {
-    font-family: "Cormorant Garamond", Georgia, serif!important;
+    font-family: "Cormorant Garamond", Georgia, serif !important;
     font-weight: 400;
     font-size: 18px;
     line-height: 1.7;
@@ -17,9 +16,9 @@ body {
         background: #000 url(/images/broken_noise.png) repeat;
     }
 }
-h2{
+h2 {
     font-size: 3rem;
-    font-family: "Alex Brush",sans-serif!important;
+    font-family: "Alex Brush", sans-serif !important;
 }
 #page {
     position: relative;
@@ -31,7 +30,7 @@ h2{
     transition: 0.5s;
 }
 .margin-add {
-    margin-left: 500px;
+    margin-left: 450px;
 }
 .logo {
     width: 120px;
@@ -1863,7 +1862,7 @@ textarea {
 .bootstrap-datetimepicker-widget {
     color: #000 !important;
 }
-.flexslider{
-    background:#000;
+.flexslider {
+    background: #000;
 }
 /*# sourceMappingURL=style.css.map */

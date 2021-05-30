@@ -205,6 +205,12 @@
 	.user-review-star-black {
 		color: black;
 	}
+
+	.btn-hovered {
+		background: transparent !important;
+		color: white;
+		width: 100%;
+	}
 </style>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css"
@@ -244,13 +250,14 @@
 						@if(!is_null($product->getActiveDiscount()))
 						<h3 class="font-weight-bold text-light px-3"><span class="harga"
 								id='{{$product->getActiveDiscount()->percentage}}'>Rp
-								{{number_format($product->price*((100-$product->getActiveDiscount()->percentage)/100),0,',','.')}}</span>
-							<sup class="pl-2"><del>{{number_format($product->price,0,',','.')}}</del></sup></h3>
-						@else
-						<h3 id='0' class="font-weight-bold text-light harga px-3">Rp
-							{{number_format($product->price,0,',','.')}}
-						</h3>
-						@endif
+								{{number_format($product->getPriceOrDiscountedPrice(),0,',','.')}}</span>
+							<sup style="color:red;text-decoration:line-through" class=" pl-2"><span
+									style="color:white;">{{number_format($product->price,0,',','.')}}</span></sup>
+							@else
+							<h3 id='0' class="font-weight-bold text-light harga px-3">Rp
+								{{number_format($product->price,0,',','.')}}
+							</h3>
+							@endif
 					</div>
 					<div style="min-height:200px;">
 						<p class="mb-3 px-3 text-justify">{{$product->description}}</p>
@@ -269,7 +276,7 @@
 							</span>
 							<input style="flex-basis:25%" type="number" id="quantity" name="quantity"
 								class="form-control p-0 text-light input-number d-inline-block text-center" value="1"
-								min="1" max="100">
+								min="1" max="{{$product->stock}}">
 							<span style="flex-basis:10%;" class="input-group-btn">
 								<button type="button" class="quantity-right-plus btn bg-transparent btn-number"
 									data-type="plus" data-field="">
@@ -292,8 +299,19 @@
 
 
 					</div>
-					<a href="#" class="d-block mb-2 mx-auto btn btn-hovered">Beli Langsung</a>
-					<a href="#" class="d-block mx-auto btn btn-hovered">Tambahkan ke Keranjang</a>
+					<form action="/product/checkout" method="POST">
+						@csrf
+						<input name="product_id" type="hidden" value="{{$product->id}}">
+						<input name="qty" id="qty" type="hidden" value="1">
+						<button type="submit" class="d-block mb-2 mx-auto btn btn-hovered">Beli Langsung</button>
+					</form>
+					<form action="/add-to-cart" method="POST">
+						@csrf
+						<input name="product_id" type="hidden" value="{{$product->id}}">
+						<input name="qty" id="qty" type="hidden" value="1">
+						<button type="submit" class="d-block mb-2 mx-auto btn btn-hovered">Tambahkan ke
+							Keranjang</button>
+					</form>
 				</div>
 			</div>
 			<div class="row mt-5">
@@ -302,7 +320,9 @@
 				</div>
 				<div class="col-md-12">
 					<div class="row">
-						@if(Illuminate\Support\Facades\Auth::guard('web')->check())
+						@if (!Auth::guest())
+						@if(Auth::user()->manyNotReviewed($product)>0)
+						{{-- @if(Auth::user()->haveBuyed($product) && !Auth::user()->alreadyReviewed($product->id)) --}}
 						<div class="col-md-12">
 							<div class="mb-4">
 								<h4 class="text-light mb-3">Tuliskan review Anda</h4>
@@ -329,14 +349,22 @@
 							</div>
 						</div>
 						@endif
+						@endif
 						<div class="col-md-7 review-container">
 							@if(count($product->reviews))
 							@foreach ($product->reviews as $review)
 							{{-- @if($review->user_id==Auth::user()->id) --}}
 							<div class="card card-style mb-2">
 								<div class="card-body">
-									<h3 class="mb-0" style="color:#EA272D;">{{$review->user->name}}
-										{{$review->user_id=='1' ? '(You)' : ''}}</h3>
+									@if(!is_null(Auth::user()))
+									@if(Auth::user()->id==$review->user_id)
+									<h3 class="mb-0" style="color:#EA272D;">{{$review->user->name}} (You)</h3>
+									@else
+									<h3 class="mb-0" style="color:#EA272D;">{{$review->user->name}}</h3>
+									@endif
+									@else
+									<h3 class="mb-0" style="color:#EA272D;">{{$review->user->name}}</h3>
+									@endif
 									<div>
 										@for ($i = 0; $i < $review->rate; $i++)
 											<span class="fa fa-star user-review-star"></span>
@@ -351,34 +379,6 @@
 							</div>
 							@endforeach
 							@endif
-							{{-- <div class="card card-style mb-2">
-								<div class="card-body">
-									<h3 class="mb-0" style="color:#EA272D;">Dewa Krishna</h3>
-									<p class="mb-0">*****</p>
-									<p class="mb-0">Produknya bagus tapi kok saya gak dikirim-kirim</p>
-								</div>
-							</div>
-							<div class="card card-style mb-2">
-								<div class="card-body">
-									<h3 class="mb-0" style="color:#EA272D;">Dewa Krishna</h3>
-									<p class="mb-0">*****</p>
-									<p class="mb-0">Produknya bagus tapi kok saya gak dikirim-kirim</p>
-								</div>
-							</div>
-							<div class="card card-style mb-2">
-								<div class="card-body">
-									<h3 class="mb-0" style="color:#EA272D;">Dewa Krishna</h3>
-									<p class="mb-0">*****</p>
-									<p class="mb-0">Produknya bagus tapi kok saya gak dikirim-kirim</p>
-								</div>
-							</div>
-							<div class="card card-style mb-2">
-								<div class="card-body">
-									<h3 class="mb-0" style="color:#EA272D;">Dewa Krishna</h3>
-									<p class="mb-0">*****</p>
-									<p class="mb-0">Produknya bagus tapi kok saya gak dikirim-kirim</p>
-								</div>
-							</div> --}}
 						</div>
 						<div class="col-md-5">
 							<div class="d-flex justify-content-center align-items-center">
@@ -428,7 +428,10 @@
 								<h5 class="card-title font-weight-bold text-light">{{$item->product_name}}</h5>
 								<p class="card-text text-light">{{Str::limit($item->description, 100, $end='...')}}
 								</p>
-								<a href="#" class="btn btn-primary">Beli Langsung</a>
+								<form action="/product/checkout" method="POST">
+									@csrf
+									<button type="submit" class="btn btn-primary">Beli Langsung</button>
+								</form>
 							</div>
 						</div>
 						@endforeach
@@ -471,7 +474,7 @@
 		function updateSubtotal(quan){
 			var status=$('.harga').attr('id');
 			console.log(harga*quan);
-			$('#subtotal').html(formatRupiah(harga*quan));
+			$('#subtotal').html("Rp " + formatRupiah(harga*quan));
 		}
 		var quantitiy=0;
 		$('.quantity-right-plus').click(function(e){
@@ -484,7 +487,7 @@
 				// If is not undefined
 					
 					$('#quantity').val(quantity + 1);
-
+				$('#qty').val(quantity+1);
 				updateSubtotal(quantity+1)
 					// Increment
 				
@@ -497,7 +500,7 @@
 				var quantity = parseInt($('#quantity').val());
 				
 				// If is not undefined
-			
+				$('#qty').val(quantity-1);
 					// Increment
 					if(quantity>1){
 					$('#quantity').val(quantity - 1);

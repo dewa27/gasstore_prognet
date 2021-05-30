@@ -41,6 +41,32 @@
         .icon-container {
             width: 30px !important;
         }
+
+        .button-notify {
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer !important;
+        }
+
+        .button-notify:focus {
+            outline: none;
+            color: blue;
+        }
+
+        .notif-box {
+            position: absolute !important;
+            top: 80%;
+            z-index: 1;
+            overflow: auto;
+            max-height: 300px;
+            display: none;
+        }
+
+        .notif-item:hover {
+            filter: brightness(90%) !important;
+            cursor: pointer;
+        }
     </style>
     @yield('head')
 </head>
@@ -52,7 +78,7 @@
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
                 <a href="/admin/products" class="brand-link text-center">
-                    <span class="brand-text font-weight-light">Toko Dewa Prognet 6</span>
+                    <span class="brand-text font-weight-light">GASSTORE Prognet 6</span>
                 </a>
 
                 <!-- Sidebar -->
@@ -60,9 +86,15 @@
                     <!-- Sidebar user panel (optional) -->
                     <div class="user-panel mb-3 py-2 d-flex justify-content-between align-items-center">
                         <div class="info">
-                            <a href="" class="d-block">Dewa 19</a>
+                            <a href="" class="d-block">{{Auth::user()->name}}</a>
                         </div>
-                        <img src="{{asset('images/foto-himpunan.jpg')}}" class="d-block profile rounded-circle" alt="X">
+                        @if (is_null(Auth::user()->profile_image))
+                        <img src="/images/admin.png" class="d-block profile rounded-circle" alt="X">
+                        @else
+                        <img src="/images/{{Auth::user()->profile_image}}" class="d-block profile rounded-circle"
+                            alt="X">
+
+                        @endif
 
                     </div>
                     <!-- Sidebar Menu -->
@@ -171,18 +203,49 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
-                <div class="content-header">
+                <div style="background-color:#F5F6FA;" class="py-2 content-header sticky-top">
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0 text-dark">Dashboard</h1>
+                                <h5 class="mb-0">Kembali ke Dashboard</h5>
                             </div><!-- /.col -->
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 position-relative">
                                 <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><i class="fas fa-lg fa-bell"></i></li>
-                                    <li class="breadcrumb-item"><a href="#">Logout</a></li>
+                                    <li class="breadcrumb-item"><button class="button-notify"><i
+                                                class="fas fa-lg fa-bell"></i></button></li>
+                                    <li class="breadcrumb-item"><a href="#" onclick="event.preventDefault();
+                                        document.getElementById('frm-logout').submit();">Logout</a></li>
+                                    <form id="frm-logout" action="{{ route('admin.logout') }}" method="POST"
+                                        style="display: none;">
+                                        @csrf
+                                    </form>
                                     {{-- <li class="breadcrumb-item active">Dashboard v1</li> --}}
                                 </ol>
+                                <div class="w-75 notif-box">
+                                    <div class="card px-2 py-2">
+                                        <form id="notifForm" action="/admin/notifikasi/baca" method="POST">
+                                            @csrf
+                                            <input id="trans_id" type="hidden" name="transaction_id">
+                                            <input id="review_id" type="hidden" name="review_id">
+                                            <input id="notif_id" type="hidden" name="notification_id">
+                                            <input id="product_id" type="hidden" name="product_id">
+                                            <h5 class="text-center">Notifikasi</h5>
+                                            @if ($notif->count()==0)
+                                            <p class="text-center">Tidak ada Notifikasi</p>
+                                            @else
+                                            @foreach ($notif as $item)
+                                            <div data-notif-type="{{$item->data['type']}}" data-notif="{{$item->id}}"
+                                                id="{{$item->data['type']=="transaction" ? $item->data['transaction_id'] : $item->data['review_id']}}"
+                                                class="card my-1 p-2 notif-item">
+                                                <p class="mb-0">{{$item->data['message']}}</p>
+                                                <p class="mb-0 text-right" style="font-size:14px;">
+                                                    {{$item->created_at->diffForHumans()}}</p>
+                                            </div>
+                                            @endforeach
+                                            @endif
+                                        </form>
+                                    </div>
+                                </div>
                             </div><!-- /.col -->
                         </div><!-- /.row -->
                     </div><!-- /.container-fluid -->
@@ -197,14 +260,29 @@
     </div>
 </body>
 <script>
-    $('.has-treeview').click(function(){
-    if($(this).hasClass('menu-open')){
-        $(this).removeClass('menu-open');
-    }
-    else{
-        $(this).addClass('menu-open');
-    }
-    })
+    $(function() {
+        $('.has-treeview').click(function(){
+        if($(this).hasClass('menu-open')){
+            $(this).removeClass('menu-open');
+        }
+        else{
+            $(this).addClass('menu-open');
+        }
+        });
+        $('.button-notify').click(function(){
+            $('.notif-box').toggle();
+        });
+        $('.notif-item').click(function(){
+            if($(this).attr('data-notif-type')=="transaction"){
+                $('#trans_id').val($(this).attr('id'));
+                $('#notif_id').val($(this).attr('data-notif'));
+            }else{
+                $('#notif_id').val($(this).attr('data-notif'));
+                $('#review_id').val($(this).attr('id'));
+            }
+            $('#notifForm').submit();
+        });
+    });
 </script>
 @yield('script')
 
