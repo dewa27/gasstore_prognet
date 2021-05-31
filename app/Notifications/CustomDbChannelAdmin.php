@@ -13,7 +13,7 @@ class CustomDbChannelAdmin
 
         return $notifiable->routeNotificationFor('database')->create([
             //customize here
-            'notifiable_id' => Auth::user()->id,
+            'notifiable_id' => Auth::guard('admin')->user()->id,
             'type' => get_class($notification),
             'data' => $data,
             'read_at' => null,

@@ -32,7 +32,7 @@ Route::get('/products/search', 'MainController@search');
 // Route::get('/cart', 'MainController@cart')->middleware(['auth', 'verified']);
 // Route::get('/login', 'MainController@login');
 // Route::get('/register', 'MainController@register');
-Route::post('/product/review', 'MainController@user_send_review');
+
 //------------------START HALAMAN PUBLIK--------------------
 
 //------------------START HALAMAN USER--------------------
@@ -41,45 +41,45 @@ Route::post('/product/review', 'MainController@user_send_review');
 //------------------START HALAMAN USER--------------------
 
 // ------------------START HALAMAN ADMIN--------------------
-//<<<<<----PRODUK : FINISHED---->>>>>
-Route::get('/admin/products', 'ProductController@index');
-Route::get('/admin/products/create', 'ProductController@create');
-Route::post('/admin/products/store', 'ProductController@store');
-Route::get('/admin/products/{product:id}/detail', 'ProductController@show');
-Route::get('/admin/products/{product:id}/edit', 'ProductController@edit');
-Route::post('/admin/products/{product:id}/update', 'ProductController@update');
-Route::delete('/admin/products/{product:id}/delete', 'ProductController@delete');
-Route::get('/admin/products/search', 'ProductController@search');
-Route::get('/admin/products/trashed', 'ProductController@trash');
-Route::delete('/admin/products/trashed/{id}/delete', 'ProductController@trashTheTrashed');
-Route::get('/admin/products/trashed/{id}/restore', 'ProductController@restore');
-Route::post('/admin/product/review/response', 'ReviewController@send_response');
+// //<<<<<----PRODUK : FINISHED---->>>>>
+// Route::get('/admin/products', 'ProductController@index');
+// Route::get('/admin/products/create', 'ProductController@create');
+// Route::post('/admin/products/store', 'ProductController@store');
+// Route::get('/admin/products/{product:id}/detail', 'ProductController@show');
+// Route::get('/admin/products/{product:id}/edit', 'ProductController@edit');
+// Route::post('/admin/products/{product:id}/update', 'ProductController@update');
+// Route::delete('/admin/products/{product:id}/delete', 'ProductController@delete');
+// Route::get('/admin/products/search', 'ProductController@search');
+// Route::get('/admin/products/trashed', 'ProductController@trash');
+// Route::delete('/admin/products/trashed/{id}/delete', 'ProductController@trashTheTrashed');
+// Route::get('/admin/products/trashed/{id}/restore', 'ProductController@restore');
+// Route::post('/admin/product/review/response', 'ReviewController@send_response');
 
-//<<<<<----PRODUK KATEGORI: FINISHED---->>>>>
-Route::get('/admin/categories', 'ProductCategoryController@index');
-Route::get('/admin/categories/create', 'ProductCategoryController@create');
-Route::post('/admin/categories/store', 'ProductCategoryController@store');
-Route::get('/admin/categories/{product_category:id}/detail', 'ProductCategoryController@show');
-Route::delete('/admin/categories/{product_category:id}/delete', 'ProductCategoryController@delete');
+// //<<<<<----PRODUK KATEGORI: FINISHED---->>>>>
+// Route::get('/admin/categories', 'ProductCategoryController@index');
+// Route::get('/admin/categories/create', 'ProductCategoryController@create');
+// Route::post('/admin/categories/store', 'ProductCategoryController@store');
+// Route::get('/admin/categories/{product_category:id}/detail', 'ProductCategoryController@show');
+// Route::delete('/admin/categories/{product_category:id}/delete', 'ProductCategoryController@delete');
 
-//<<<<<----KURIR: ON PROGRESS---->>>>>
-Route::get('/admin/couriers', 'CourierController@index');
-Route::get('/admin/couriers/create', 'CourierController@create');
-Route::post('/admin/couriers/store', 'CourierController@store');
-Route::get('/admin/couriers/{courier:id}/detail', 'CourierController@show');
-Route::delete('/admin/couriers/{courier:id}/delete', 'CourierController@delete');
+// //<<<<<----KURIR: ON PROGRESS---->>>>>
+// Route::get('/admin/couriers', 'CourierController@index');
+// Route::get('/admin/couriers/create', 'CourierController@create');
+// Route::post('/admin/couriers/store', 'CourierController@store');
+// Route::get('/admin/couriers/{courier:id}/detail', 'CourierController@show');
+// Route::delete('/admin/couriers/{courier:id}/delete', 'CourierController@delete');
 
-//<<<<<----DISKON: ON PROGRESS---->>>>>
-Route::get('/admin/discounts', 'DiscountController@index');
-Route::get('/admin/discounts/create', 'DiscountController@create');
-Route::post('/admin/discounts/store', 'DiscountController@store');
-Route::get('/admin/discounts/{discount:id}/detail', 'DiscountController@show');
-Route::delete('/admin/discounts/{discount:id}/delete', 'DiscountController@delete');
+// //<<<<<----DISKON: ON PROGRESS---->>>>>
+// Route::get('/admin/discounts', 'DiscountController@index');
+// Route::get('/admin/discounts/create', 'DiscountController@create');
+// Route::post('/admin/discounts/store', 'DiscountController@store');
+// Route::get('/admin/discounts/{discount:id}/detail', 'DiscountController@show');
+// Route::delete('/admin/discounts/{discount:id}/delete', 'DiscountController@delete');
 
-//<<<<<----TRANSAKSI: ON PROGRESS---->>>>>
-Route::get('/admin/transactions', 'TransactionController@index');
-Route::get('/admin/transactions/{transaction:id}/detail', 'TransactionController@show');
-Route::post('/admin/transaction/update-status', 'TransactionController@updateStatus');
+// //<<<<<----TRANSAKSI: ON PROGRESS---->>>>>
+// Route::get('/admin/transactions', 'TransactionController@index');
+// Route::get('/admin/transactions/{transaction:id}/detail', 'TransactionController@show');
+// Route::post('/admin/transaction/update-status', 'TransactionController@updateStatus');
 
 //<<<<<----TRANSAKSI: ON PROGRESS---->>>>>
 Route::get('/admin/users', 'UserController@index');
@@ -102,9 +102,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/product/checkout/send', 'MainController@product_post_checkout');
     Route::post('/transaksi/{transaction:id}/update-status', 'MainController@update_status_transaksi');
     Route::post('/notifikasi/baca', 'MainController@baca_notif');
+    Route::post('/cart/update', 'MainController@updateCart');
+    Route::post('/product/review', 'MainController@user_send_review');
 });
-
-Route::post('/cart/update', 'MainController@updateCart');
 Route::prefix('admin')->group(function () {
     // Dashboard route
     Route::get('/', 'AdminController@index')->name('admin.dashboard');
@@ -128,42 +128,42 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/notifikasi/baca', 'AdminController@baca_notif');
     //<<<<<----PRODUK : FINISHED---->>>>>
-    // Route::get('/products', 'ProductController@index');
-    // Route::get('/products/create', 'ProductController@create');
-    // Route::post('/products/store', 'ProductController@store');
-    // Route::get('/products/{product:id}/detail', 'ProductController@show');
-    // Route::get('/products/{product:id}/edit', 'ProductController@edit');
-    // Route::post('/products/{product:id}/update', 'ProductController@update');
-    // Route::delete('/products/{product:id}/delete', 'ProductController@delete');
-    // Route::get('/products/search', 'ProductController@search');
-    // Route::get('/products/trashed', 'ProductController@trash');
-    // Route::delete('/products/trashed/{id}/delete', 'ProductController@trashTheTrashed');
-    // Route::get('/products/trashed/{id}/restore', 'ProductController@restore');
-    // Route::post('/product/review/response', 'ReviewController@send_response');
+    Route::get('/products', 'ProductController@index');
+    Route::get('/products/create', 'ProductController@create');
+    Route::post('/products/store', 'ProductController@store');
+    Route::get('/products/{product:id}/detail', 'ProductController@show');
+    Route::get('/products/{product:id}/edit', 'ProductController@edit');
+    Route::post('/products/{product:id}/update', 'ProductController@update');
+    Route::delete('/products/{product:id}/delete', 'ProductController@delete');
+    Route::get('/products/search', 'ProductController@search');
+    Route::get('/products/trashed', 'ProductController@trash');
+    Route::delete('/products/trashed/{id}/delete', 'ProductController@trashTheTrashed');
+    Route::get('/products/trashed/{id}/restore', 'ProductController@restore');
+    Route::post('/product/review/response', 'ReviewController@send_response');
 
     // //<<<<<----PRODUK KATEGORI: FINISHED---->>>>>
-    // Route::get('/admin/categories', 'ProductCategoryController@index');
-    // Route::get('/admin/categories/create', 'ProductCategoryController@create');
-    // Route::post('/admin/categories/store', 'ProductCategoryController@store');
-    // Route::get('/admin/categories/{product_category:id}/detail', 'ProductCategoryController@show');
-    // Route::delete('/admin/categories/{product_category:id}/delete', 'ProductCategoryController@delete');
+    Route::get('/categories', 'ProductCategoryController@index');
+    Route::get('/categories/create', 'ProductCategoryController@create');
+    Route::post('/categories/store', 'ProductCategoryController@store');
+    Route::get('/categories/{product_category:id}/detail', 'ProductCategoryController@show');
+    Route::delete('/categories/{product_category:id}/delete', 'ProductCategoryController@delete');
 
     // //<<<<<----KURIR: ON PROGRESS---->>>>>
-    // Route::get('/admin/couriers', 'CourierController@index');
-    // Route::get('/admin/couriers/create', 'CourierController@create');
-    // Route::post('/admin/couriers/store', 'CourierController@store');
-    // Route::get('/admin/couriers/{courier:id}/detail', 'CourierController@show');
-    // Route::delete('/admin/couriers/{courier:id}/delete', 'CourierController@delete');
+    Route::get('/couriers', 'CourierController@index');
+    Route::get('/couriers/create', 'CourierController@create');
+    Route::post('/couriers/store', 'CourierController@store');
+    Route::get('/couriers/{courier:id}/detail', 'CourierController@show');
+    Route::delete('/couriers/{courier:id}/delete', 'CourierController@delete');
 
-    // //<<<<<----DISKON: ON PROGRESS---->>>>>
-    // Route::get('/admin/discounts', 'DiscountController@index');
-    // Route::get('/admin/discounts/create', 'DiscountController@create');
-    // Route::post('/admin/discounts/store', 'DiscountController@store');
-    // Route::get('/admin/discounts/{discount:id}/detail', 'DiscountController@show');
-    // Route::delete('/admin/discounts/{discount:id}/delete', 'DiscountController@delete');
+    //<<<<<----DISKON: ON PROGRESS---->>>>>
+    Route::get('/discounts', 'DiscountController@index');
+    Route::get('/discounts/create', 'DiscountController@create');
+    Route::post('/discounts/store', 'DiscountController@store');
+    Route::get('/discounts/{discount:id}/detail', 'DiscountController@show');
+    Route::delete('/discounts/{discount:id}/delete', 'DiscountController@delete');
 
-    // //<<<<<----TRANSAKSI: ON PROGRESS---->>>>>
-    // Route::get('/admin/transactions', 'TransactionController@index');
-    // Route::get('/admin/transactions/{transaction:id}/detail', 'TransactionController@show');
-    // Route::post('/admin/transaction/update-status', 'TransactionController@updateStatus');
+    //<<<<<----TRANSAKSI: ON PROGRESS---->>>>>
+    Route::get('/transactions', 'TransactionController@index');
+    Route::get('/transactions/{transaction:id}/detail', 'TransactionController@show');
+    Route::post('/transaction/update-status', 'TransactionController@updateStatus');
 });

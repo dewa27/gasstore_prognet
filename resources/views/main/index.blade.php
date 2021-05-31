@@ -200,27 +200,20 @@
 	<div id="fh5co-featured-testimony" class="fh5co-section">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12 fh5co-heading animate-box">
-					<h2>Testimony</h2>
-					<div class="row">
-						<div class="col-md-6">
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis ab debitis sit
-								itaque totam, a maiores nihil, nulla magnam porro minima officiis! Doloribus aliquam
-								voluptates corporis et tempora consequuntur ipsam, itaque, nesciunt similique commodi
-								omnis.</p>
-						</div>
-					</div>
-				</div>
-
 				<div class="col-md-5 animate-box img-to-responsive animate-box" data-animate-effect="fadeInLeft">
-					<img src="/images/person_1.jpg" alt="">
+					<img style="width:1000px; filter:brightness(60%);" src="/images/motor.jpeg" alt="">
 				</div>
 				<div class="col-md-7 animate-box" data-animate-effect="fadeInRight">
 					<blockquote>
-						<p> &ldquo; Quantum ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis ab debitis
-							sit itaque totam, a maiores nihil, nulla magnam porro minima officiis! Doloribus aliquam
-							voluptates corporis et tempora consequuntur ipsam. &rdquo;</p>
-						<p class="author"><cite>&mdash; Jane Smith</cite></p>
+						<p> &ldquo;Four wheels move the body, two wheels move the soul &rdquo;</p>
+					</blockquote>
+					<blockquote>
+						<p> &ldquo;No journey is too long with the right motorcycle &rdquo;</p>
+					</blockquote>
+					<blockquote>
+						<p> &ldquo;I promise to treat you as good as my leather, and ride you as much as my harley
+							&rdquo;</p>
+						{{-- <p class="author"><cite>&mdash; Unknown Rider</cite></p> --}}
 					</blockquote>
 				</div>
 			</div>

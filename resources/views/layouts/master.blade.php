@@ -105,7 +105,7 @@
                 <div class="row my-auto">
                     <div style="right:18%;" class="w-50 notif-box navpopup-menu">
                         <div style="background-color:black;" class="card px-2 py-2">
-                            <form id="notifForm" action="notifikasi/baca" method="POST">
+                            <form id="notifForm" action="/notifikasi/baca" method="POST">
                                 @csrf
                                 <input id="trans_id" type="hidden" name="transaction_id">
                                 <input id="response_id" type="hidden" name="response_id">
@@ -217,45 +217,18 @@
             @endif
 
         </div>
-        <footer id="fh5co-footer" role="contentinfo" class="fh5co-section">
+        <footer style="padding-bottom:0px !important;" id="fh5co-footer" role="contentinfo" class="fh5co-section">
             <div class="container">
                 <div class="row row-pb-md">
-                    <div class="col-md-4 fh5co-widget">
-                        <h4>Tasty</h4>
-                        <p>Facilis ipsum reprehenderit nemo molestias. Aut cum mollitia reprehenderit. Eos cumque dicta
-                            adipisci architecto culpa amet.</p>
+                    <div class="col-md-12">
+                        <h4 style="font-size:30px;" class="text-light text-center">GASSTORE TOKO MOTOR TUA TERPERCAYA
+                            SEJAK 1917</h4>
                     </div>
-                    <div class="col-md-2 col-md-push-1 fh5co-widget">
-                        <h4>Links</h4>
-                        <ul class="fh5co-footer-links">
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Menu</a></li>
-                            <li><a href="#">Gallery</a></li>
-                        </ul>
+                    <div>
+                        <p class="mb-0">Instagram : @gasstoremantap</p>
+                        <p class="mb-0">Hubungi Kami : 081xxxxxxx</p>
+                        <p class="mb-0">Alamat : Jl. Bali Gg. Denpasar No.23</p>
                     </div>
-
-                    <div class="col-md-2 col-md-push-1 fh5co-widget">
-                        <h4>Categories</h4>
-                        <ul class="fh5co-footer-links">
-                            <li><a href="#">Landing Page</a></li>
-                            <li><a href="#">Real Estate</a></li>
-                            <li><a href="#">Personal</a></li>
-                            <li><a href="#">Business</a></li>
-                            <li><a href="#">e-Commerce</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-4 col-md-push-1 fh5co-widget">
-                        <h4>Contact Information</h4>
-                        <ul class="fh5co-footer-links">
-                            <li>198 West 21th Street, <br> Suite 721 New York NY 10016</li>
-                            <li><a href="tel://1234567920">+ 1235 2355 98</a></li>
-                            <li><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>
-                            <li><a href="http://https://freehtml5.co">freehtml5.co</a></li>
-                        </ul>
-                    </div>
-
                 </div>
             </div>
         </footer>
@@ -313,6 +286,7 @@
             }else{
                 $('#notif_id').val($(this).attr('data-notif'));
                 $('#response_id').val($(this).attr('id'));
+                let tes=$('#response_id').val();
             }
             $('#notifForm').submit();
         });

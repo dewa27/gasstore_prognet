@@ -16,7 +16,22 @@
                 <div class="card-header">
 
                 </div><!-- /.card-header -->
-                <div class="card-body text-center">
+                <div class="card-body px-4 text-center">
+                    <div class="row mb-5">
+                        <div style="min-height:100px;"
+                            class="col-md-4 bg-primary d-flex align-items-center text-center">
+                            <i style="font-size:40px;" class="fas fa-box mr-3"></i>
+                            <h3>{{$total_produk}} Produk</h3>
+                        </div>
+                        <div style="min-height:100px;" class="col-md-4 bg-secondary d-flex align-items-center">
+                            <i style="font-size:40px;" class="fas fa-file-invoice-dollar mr-3"></i>
+                            <h3>{{$total_transaksi}} Transaksi</h3>
+                        </div>
+                        <div style="min-height:100px;" class="col-md-4 bg-success d-flex align-items-center">
+                            <i style="font-size:40px;" class="fas fa-users mr-3"></i>
+                            <h3>{{$total_user}} Pengguna</h3>
+                        </div>
+                    </div>
                     <div class="mb-5">
                         <h4>Laporan Transaksi per Tahun</h4>
                         <canvas class="mx-auto" id="myChart" width="600" height="300"></canvas>

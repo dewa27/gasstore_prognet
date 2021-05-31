@@ -77,7 +77,7 @@
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
-                <a href="/admin/products" class="brand-link text-center">
+                <a href="/admin" class="brand-link text-center">
                     <span class="brand-text font-weight-light">GASSTORE Prognet 6</span>
                 </a>
 
@@ -207,7 +207,9 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h5 class="mb-0">Kembali ke Dashboard</h5>
+                                <a href="/admin">
+                                    <h5 class="mb-0">Kembali ke Dashboard</h5>
+                                </a>
                             </div><!-- /.col -->
                             <div class="col-sm-6 position-relative">
                                 <ol class="breadcrumb float-sm-right">

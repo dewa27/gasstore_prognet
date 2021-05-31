@@ -376,6 +376,17 @@
 									</div>
 									<p class="mb-0">{{$review->content}}</p>
 								</div>
+								@foreach ($review->responses as $item)
+
+								<div class="mx-2 card card-style mb-1">
+									<div class="card-body">
+										<p class="mb-0" style="color:#EA272D;">{{$item->content}}</p>
+										<p style="color:#EA272D !important;" class="mb-0 font-weight-bold float-right"
+											style="color:#EA272D;">
+											{{$item->admin->name}}</p>
+									</div>
+								</div>
+								@endforeach
 							</div>
 							@endforeach
 							@endif
@@ -586,22 +597,6 @@
 			$("input[name='rate']").val(`${param}`);
 			console.log($("input[name='rate']").val());
 		});
-        // $('#carouselExampleIndicators').carousel();
-		// $('.selectpicker').selectpicker({
-		// 	noneSelectedText: 'Pilih Kategori',
-		// 	size: '4',
-		// 	// virtualScroll: '2',
-		// });
-		// $(".btn-hovered").hover(function() {
-		// 	$(this).addClass("btn-primary");
-		// }, function() {
-		// 	$(this).removeClass("btn-primary");
-		// });
-		// $(".fa-stack-1x").hover(function() {
-		// 	$('.fa-stack-2x').removeClass("icon-background");
-		// }, function() {
-		// 	$('.fa-stack-2x').addClass("icon-background");
-		// });
 	});
 </script>
 @endsection

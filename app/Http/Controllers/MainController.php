@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use App\Admin;
 use App\DatabaseUserNotification;
+use App\Response;
 
 class MainController extends Controller
 {
@@ -364,7 +365,7 @@ class MainController extends Controller
         $val = [];
         $val['id'] = (int)request()->input('notification_id');
         $trans_id = request()->input('transaction_id');
-        $response = Review::find((int)request()->input('response_id'));
+        $response = Response::find((int)request()->input('response_id'));
         $val['read_at'] = now()->toDateTimeString();
         $notif = DatabaseUserNotification::find($val['id']);
         $notif->update($val);

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Transaction;
 use Illuminate\Support\Facades\Date;
 use App\Review;
+use App\Product;
+use App\User;
 
 class AdminController extends Controller
 {
@@ -100,7 +102,10 @@ class AdminController extends Controller
         $data_penjualan_sukses_5_tahun = array_reverse($data_penjualan_sukses_5_tahun);
         $data_penjualan_ongoing_5_tahun = array_reverse($data_penjualan_ongoing_5_tahun);
         $data_penjualan_cancel_5_tahun = array_reverse($data_penjualan_cancel_5_tahun);
-        return view('product.dashboard', compact('data_sukses_per_tahun', 'data_ongoing_per_tahun', 'data_cancel_per_tahun', 'data_penjualan_sukses_5_tahun', 'data_penjualan_cancel_5_tahun', 'data_penjualan_ongoing_5_tahun'));
+        $total_produk = Product::all()->count();
+        $total_transaksi = Transaction::all()->count();
+        $total_user = User::all()->count();
+        return view('product.dashboard', compact('total_produk', 'total_user', 'total_transaksi', 'data_sukses_per_tahun', 'data_ongoing_per_tahun', 'data_cancel_per_tahun', 'data_penjualan_sukses_5_tahun', 'data_penjualan_cancel_5_tahun', 'data_penjualan_ongoing_5_tahun'));
     }
     public function baca_notif()
     {
